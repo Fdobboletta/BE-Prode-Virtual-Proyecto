@@ -8,7 +8,8 @@ export const UserObject = objectType({
     t.nonNull.id('id');
     t.nonNull.string('firstName'),
       t.nonNull.string('lastName'),
-      t.nonNull.string('email');
+      t.nonNull.string('email'),
+      t.nonNull.string('token');
   },
 });
 
@@ -24,6 +25,19 @@ export const registerNewUser = mutationField('registerNewUser', {
     console.log('args', args);
     const response = await service.registerNewUser(args);
 
-    return response.user;
+    return { ...response.user, token: response.token };
+  },
+});
+
+export const authenticateUser = mutationField('authenticateUser', {
+  type: nonNull(UserObject),
+  args: {
+    email: nonNull(stringArg()),
+    password: nonNull(stringArg()),
+  },
+  resolve: async (_, args) => {
+    const response = await service.authenticateUser(args);
+
+    return { ...response.user, token: response.token };
   },
 });

@@ -53,3 +53,39 @@ export const registerNewUser = async (
     throw new Error('Unable to register new user.');
   }
 };
+
+type AuthenticateUserArgs = {
+  email: string;
+  password: string;
+};
+
+export const authenticateUser = async (
+  args: AuthenticateUserArgs,
+): Promise<{ token: string; user: UserType }> => {
+  try {
+    // Find user in the database by email
+    const user = await UserModel.findOne({ where: { email: args.email } });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    // Compare provided password with stored password hash
+    const passwordMatch = await bcrypt.compare(
+      args.password,
+      user.dataValues.password,
+    );
+
+    if (!passwordMatch) {
+      throw new Error('Invalid password.');
+    }
+
+    // Generate JWT token
+    const token = generateToken(user.dataValues);
+
+    return { token, user: user.dataValues };
+  } catch (err) {
+    console.log(err);
+    throw new Error('Unable to authenticate user.');
+  }
+};

@@ -3,6 +3,7 @@
 
 
 type Mutation {
+  authenticateUser(email: String!, password: String!): User!
   registerNewUser(email: String!, firstName: String!, lastName: String!, password: String!): User!
 }
 
@@ -16,4 +17,5 @@ type User {
   firstName: String!
   id: ID!
   lastName: String!
+  token: String!
 }
