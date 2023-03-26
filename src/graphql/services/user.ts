@@ -1,6 +1,6 @@
 import { sign, verify } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { UserModel, UserType } from '../../database/models';
+import { UserModel, UserType } from '../../database/models/userModel';
 
 type RegisterUserArgs = {
   email: string;

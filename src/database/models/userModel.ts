@@ -1,5 +1,5 @@
-import { sequelizeInstance } from './index';
-import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import { sequelizeInstance } from '../index';
+import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface UserType {
   id: string;
