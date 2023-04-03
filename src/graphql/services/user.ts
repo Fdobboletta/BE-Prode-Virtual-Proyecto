@@ -1,4 +1,4 @@
-import { sign, verify } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { UserModel, UserType } from '../../database/models/userModel';
 
@@ -14,19 +14,6 @@ const generateToken = (user: UserType) => {
   const payload = { userId: user.id, email: user.email };
   const options = { expiresIn: '1h' };
   return sign(payload, process.env.JWT_SECRET || '', options);
-};
-
-// Verify a JWT token and return the user ID
-const verifyToken = (token: string) => {
-  try {
-    const payload = verify(token, process.env.JWT_SECRET || '') as {
-      userId: string;
-      email: string;
-    };
-    return payload.userId;
-  } catch (error) {
-    return null;
-  }
 };
 
 export const registerNewUser = async (
@@ -87,5 +74,41 @@ export const authenticateUser = async (
   } catch (err) {
     console.log(err);
     throw new Error('Unable to authenticate user.');
+  }
+};
+
+type ResetPasswordArgs = {
+  email: string;
+};
+
+type ResetPasswordTokenPayload = {
+  userId: string;
+  email: string;
+  exp: number;
+};
+
+const generateResetPasswordToken = (user: UserType): string => {
+  const payload: ResetPasswordTokenPayload = {
+    userId: user.id,
+    email: user.email,
+    exp: Math.floor(Date.now() / 1000) + 60 * 60, // Expire in 1 hour
+  };
+  return sign(payload, process.env.JWT_SECRET || '');
+};
+
+export const resetPassword = async (args: ResetPasswordArgs): Promise<void> => {
+  try {
+    const user = await UserModel.findOne({ where: { email: args.email } });
+
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    const resetPasswordToken = generateResetPasswordToken(user.dataValues);
+
+    // TODO: Send email to user with reset password link containing the resetPasswordToken
+  } catch (err) {
+    console.log(err);
+    throw new Error('Unable to reset password.');
   }
 };
