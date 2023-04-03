@@ -93,7 +93,7 @@ const generateResetPasswordToken = (user: UserType): string => {
     email: user.email,
     exp: Math.floor(Date.now() / 1000) + 60 * 60, // Expire in 1 hour
   };
-  return sign(payload, process.env.JWT_SECRET || '');
+  return sign(payload, process.env.RESET_PASSWORD_SECRET || '');
 };
 
 export const resetPassword = async (args: ResetPasswordArgs): Promise<void> => {
