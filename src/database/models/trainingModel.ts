@@ -23,7 +23,7 @@ export const defineTrainingModel = (
 ) => {
   const TrainingModel = sequelizeInstance.define<
     Model<TrainingType, TrainingCreationType>
-  >('Position', {
+  >('Training', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
