@@ -3,7 +3,8 @@ import 'dotenv/config';
 import { ApolloServer } from 'apollo-server-express';
 import { schema } from './graphql/schema';
 import { createGQLContext } from './graphql/context';
-import { connectDatabase } from './database';
+import { connectDatabase, sequelizeInstance } from './database';
+import { defineModels } from './database/models/utils';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -26,6 +27,14 @@ const startServer = async () => {
 };
 
 // Connect to the database, import models and start the server
-connectDatabase().then(() => {
-  startServer();
-});
+connectDatabase();
+
+export const dbModels = defineModels(sequelizeInstance);
+if (sequelizeInstance) {
+  sequelizeInstance
+    .sync({ alter: true })
+    .then(() => console.log('📊 -> Database schema synchronized successfully!'))
+    .catch((error) => console.log('Error -> Db sync failed!!', error));
+}
+
+startServer();

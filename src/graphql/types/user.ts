@@ -6,6 +6,7 @@ export const UserObject = objectType({
   description: 'App user',
   definition: (t) => {
     t.nonNull.id('id');
+    t.string('teamId');
     t.nonNull.string('firstName'),
       t.nonNull.string('lastName'),
       t.nonNull.string('email'),
@@ -20,9 +21,9 @@ export const registerNewUser = mutationField('registerNewUser', {
     password: nonNull(stringArg()),
     firstName: nonNull(stringArg()),
     lastName: nonNull(stringArg()),
+    teamId: stringArg(),
   },
   resolve: async (_, args) => {
-    console.log('args', args);
     const response = await service.registerNewUser(args);
 
     return { ...response.user, token: response.token };

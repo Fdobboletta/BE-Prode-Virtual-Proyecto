@@ -35,6 +35,7 @@ export interface NexusGenObjects {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    teamId?: string | null; // String
     token: string; // String!
   }
 }
@@ -62,6 +63,7 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    teamId: string | null; // String
     token: string; // String!
   }
 }
@@ -79,6 +81,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    teamId: 'String'
     token: 'String'
   }
 }
@@ -94,6 +97,7 @@ export interface NexusGenArgTypes {
       firstName: string; // String!
       lastName: string; // String!
       password: string; // String!
+      teamId?: string | null; // String
     }
   }
 }
