@@ -1,12 +1,13 @@
 import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { UserModel, UserType } from '../../database/models/userModel';
-
+import { UserType } from '../../database/models/userModel';
+import { dbModels } from '../../server';
 type RegisterUserArgs = {
   email: string;
   firstName: string;
   lastName: string;
   password: string;
+  teamId?: string | null | undefined;
 };
 
 // Generate a JWT token
@@ -24,20 +25,25 @@ export const registerNewUser = async (
     const hashedPassword = await bcrypt.hash(args.password, 10);
 
     // Create new user in the database
-    const user = await UserModel.create({
+    const user = await dbModels.UserModel.create({
       email: args.email,
       password: hashedPassword,
       firstName: args.firstName,
       lastName: args.lastName,
+      teamId: args.teamId,
     });
+
+    console.log('user', user);
 
     // Generate JWT token
     const token = generateToken(user.dataValues);
 
     return { token, user: user.dataValues };
-  } catch (err) {
-    console.log(err);
-    throw new Error('Unable to register new user.');
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error('UNKNOWN ERROR');
   }
 };
 
@@ -51,7 +57,9 @@ export const authenticateUser = async (
 ): Promise<{ token: string; user: UserType }> => {
   try {
     // Find user in the database by email
-    const user = await UserModel.findOne({ where: { email: args.email } });
+    const user = await dbModels.UserModel.findOne({
+      where: { email: args.email },
+    });
 
     if (!user) {
       throw new Error('User not found.');
@@ -98,7 +106,9 @@ const generateResetPasswordToken = (user: UserType): string => {
 
 export const resetPassword = async (args: ResetPasswordArgs): Promise<void> => {
   try {
-    const user = await UserModel.findOne({ where: { email: args.email } });
+    const user = await dbModels.UserModel.findOne({
+      where: { email: args.email },
+    });
 
     if (!user) {
       throw new Error('User not found.');

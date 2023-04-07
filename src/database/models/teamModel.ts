@@ -1,6 +1,5 @@
-import { sequelizeInstance } from '../index';
 import { DataTypes, Model, Optional } from 'sequelize';
-import { UserModel } from './userModel';
+import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
 
 export interface TeamType {
   id: string;
@@ -13,44 +12,47 @@ export interface TeamType {
   description: string;
 }
 
-interface TeamCreationType extends Optional<TeamType, 'id'> {}
+export interface TeamCreationType extends Optional<TeamType, 'id'> {}
 
-export const TeamModel = sequelizeInstance.define<
-  Model<TeamType, TeamCreationType>
->('Team', {
-  id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  logoUrl: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  mainColor: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  secondColor: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  thirdColor: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  city: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-});
+export const defineTeamModel = (sequelizeInstance: SequelizeInstance) => {
+  const TeamModel = sequelizeInstance.define<Model<TeamType, TeamCreationType>>(
+    'Team',
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      logoUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      mainColor: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      secondColor: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      thirdColor: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      city: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+    },
+  );
 
-TeamModel.hasMany(UserModel, { foreignKey: 'teamId' });
+  return TeamModel;
+};

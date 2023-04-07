@@ -4,7 +4,7 @@
 
 type Mutation {
   authenticateUser(email: String!, password: String!): User!
-  registerNewUser(email: String!, firstName: String!, lastName: String!, password: String!): User!
+  registerNewUser(email: String!, firstName: String!, lastName: String!, password: String!, teamId: String): User!
 }
 
 type Query {
@@ -17,5 +17,6 @@ type User {
   firstName: String!
   id: ID!
   lastName: String!
+  teamId: String
   token: String!
 }
