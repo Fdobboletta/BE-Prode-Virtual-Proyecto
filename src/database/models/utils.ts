@@ -1,5 +1,6 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
 import { defineCompetitionModel } from './competitionModel';
+import { definePlayerModel } from './playersModel';
 import { definePositionModel } from './positionModel';
 import { defineTeamCompetitionModel } from './teamCompetitionModel';
 import { defineTeamModel } from './teamModel';
@@ -13,9 +14,12 @@ export type DbModels = {
   CompetitionModel: ReturnType<typeof defineCompetitionModel>;
   TeamCompetitionModel: ReturnType<typeof defineTeamCompetitionModel>;
   TrainingModel: ReturnType<typeof defineTrainingModel>;
+  PlayerModel: ReturnType<typeof definePlayerModel>;
 };
 
-export const defineModels = (sequelizeInstance: SequelizeInstance) => {
+export const defineModels = (
+  sequelizeInstance: SequelizeInstance,
+): DbModels => {
   const TeamModel = defineTeamModel(sequelizeInstance);
   const UserModel = defineUserModel(sequelizeInstance, TeamModel);
   const PositionModel = definePositionModel(sequelizeInstance);
@@ -26,6 +30,7 @@ export const defineModels = (sequelizeInstance: SequelizeInstance) => {
     CompetitionModel,
   );
   const TrainingModel = defineTrainingModel(sequelizeInstance, TeamModel);
+  const PlayerModel = definePlayerModel(sequelizeInstance, TeamModel);
 
   const allModels = {
     TeamModel,
@@ -34,6 +39,7 @@ export const defineModels = (sequelizeInstance: SequelizeInstance) => {
     CompetitionModel,
     TeamCompetitionModel,
     TrainingModel,
+    PlayerModel,
   };
 
   return allModels;
