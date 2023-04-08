@@ -15,6 +15,7 @@ const server = new ApolloServer({
   context: (ctx) => {
     createGQLContext(undefined);
   },
+  introspection: true,
 });
 
 // Apply middleware to the server and start listening for incoming requests
