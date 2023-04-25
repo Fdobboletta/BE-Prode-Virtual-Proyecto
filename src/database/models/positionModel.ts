@@ -1,18 +1,11 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 
-enum PositionZone {
-  ARQ = 'ARQ',
-  DEF = 'DEF',
-  MED = 'MED',
-  DEL = 'DEL',
-}
-
 export interface PositionType {
   id: string;
   name: string;
   abbreviation: string;
-  zone: PositionZone;
+  zone: 'ARQ' | 'DEF' | 'MED' | 'DEL';
 }
 
 export interface PositionCreationType extends Optional<PositionType, 'id'> {}

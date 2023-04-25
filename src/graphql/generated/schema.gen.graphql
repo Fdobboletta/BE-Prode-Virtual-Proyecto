@@ -4,11 +4,40 @@
 
 type Mutation {
   authenticateUser(email: String!, password: String!): User!
+  createPosition(abbreviation: String!, name: String!, zone: PositionZone!): Position!
+  createTeam(city: String!, description: String, logoUrl: String!, mainColor: String!, name: String!, secondColor: String, thirdColor: String): Team!
   registerNewUser(email: String!, firstName: String!, lastName: String!, password: String!, teamId: String): User!
 }
 
+"""Player position on the field"""
+type Position {
+  abbreviation: String!
+  id: ID!
+  name: String!
+  zone: PositionZone
+}
+
+enum PositionZone {
+  ARQ
+  DEF
+  DEL
+  MED
+}
+
 type Query {
-  ok: Boolean!
+  getAllPositions: [Position!]!
+}
+
+"""Soccer Team"""
+type Team {
+  city: String!
+  description: String
+  id: ID!
+  logoUrl: String!
+  mainColor: String!
+  name: String!
+  secondColor: String
+  thirdColor: String
 }
 
 """App user"""
