@@ -15,8 +15,8 @@ const PositionZone = enumType({
 });
 
 export const PositionObject = objectType({
-  name: 'User',
-  description: 'App user',
+  name: 'Position',
+  description: 'Player position on the field',
   definition: (t) => {
     t.nonNull.id('id');
     t.nonNull.string('name'),

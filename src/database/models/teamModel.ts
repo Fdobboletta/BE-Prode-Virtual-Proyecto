@@ -4,12 +4,12 @@ import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
 export interface TeamType {
   id: string;
   name: string;
-  logoUrl: string | null;
+  logoUrl: string;
   mainColor: string;
-  secondColor: string | null;
-  thirdColor: string | null;
+  secondColor?: string | null | undefined;
+  thirdColor?: string | null | undefined;
   city: string;
-  description: string;
+  description?: string | null | undefined;
 }
 
 export interface TeamCreationType extends Optional<TeamType, 'id'> {}
@@ -26,6 +26,7 @@ export const defineTeamModel = (sequelizeInstance: SequelizeInstance) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       logoUrl: {
         type: DataTypes.STRING,
