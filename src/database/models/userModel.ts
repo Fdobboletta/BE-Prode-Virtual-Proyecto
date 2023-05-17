@@ -1,22 +1,25 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
-import { DataTypes, Model, ModelCtor, ModelStatic, Optional } from 'sequelize';
-import { TeamCreationType, TeamType } from './teamModel';
+import { DataTypes, Model, Optional } from 'sequelize';
+
+export enum UserRole {
+  ADMIN = 'admin',
+  PLAYER = 'player',
+}
 
 export interface UserType {
   id: string;
   email: string;
+  address: string;
+  cellphone: string;
   password: string;
   firstName: string;
   lastName: string;
-  teamId: string | null;
+  role: UserRole;
 }
 
 interface UserCreationType extends Optional<UserType, 'id'> {}
 
-export const defineUserModel = (
-  sequelizeInstance: SequelizeInstance,
-  TeamModel: ModelStatic<Model<TeamType, TeamCreationType>>,
-) => {
+export const defineUserModel = (sequelizeInstance: SequelizeInstance) => {
   const UserModel = sequelizeInstance.define<Model<UserType, UserCreationType>>(
     'User',
     {
@@ -42,20 +45,21 @@ export const defineUserModel = (
         type: DataTypes.STRING,
         allowNull: false,
       },
-      teamId: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        unique: true,
-        references: {
-          model: TeamModel,
-          key: 'id',
-        },
+      cellphone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: DataTypes.ENUM(UserRole.ADMIN, UserRole.PLAYER),
+        defaultValue: UserRole.PLAYER,
+        allowNull: false,
       },
     },
   );
-
-  UserModel.belongsTo(TeamModel, { foreignKey: 'teamId' });
-  TeamModel.hasMany(UserModel, { foreignKey: 'teamId' });
 
   return UserModel;
 };

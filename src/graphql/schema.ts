@@ -3,11 +3,6 @@ import { makeSchema, nonNull, queryField } from 'nexus';
 import path from 'path';
 import * as typeDefs from './types';
 
-export const firstQuery = queryField('firstQuery', {
-  type: nonNull('String'),
-  resolve: () => 'hello',
-});
-
 export const schema = makeSchema({
   types: typeDefs,
   contextType: {

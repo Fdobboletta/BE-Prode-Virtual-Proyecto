@@ -1,4 +1,6 @@
 import express from 'express';
+import fs from 'fs';
+import https from 'https';
 import 'dotenv/config';
 import { ApolloServer } from 'apollo-server-express';
 import { schema } from './graphql/schema';
@@ -22,9 +24,20 @@ const server = new ApolloServer({
 const startServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
-  app.listen(PORT, () => {
-    console.log(`🚀 -> Server running on port ${PORT}...`);
-  });
+  if (process.env.NODE_ENV === 'local') {
+    const options = {
+      key: fs.readFileSync('localhost.key'),
+      cert: fs.readFileSync('localhost.crt'),
+    };
+
+    https.createServer(options, app).listen(PORT, () => {
+      console.log(`🚀 -> HTTPS Server running on port ${PORT}...`);
+    });
+  } else if (process.env.NODE_ENV === 'production') {
+    app.listen(PORT, () => {
+      console.log(`🚀 -> Production Server running on port ${PORT}...`);
+    });
+  }
 };
 
 // Connect to the database, import models and start the server

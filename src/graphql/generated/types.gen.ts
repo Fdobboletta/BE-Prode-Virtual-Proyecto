@@ -17,7 +17,6 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  PositionZone: "ARQ" | "DEF" | "DEL" | "MED"
 }
 
 export interface NexusGenScalars {
@@ -29,30 +28,18 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  MercadoPagoPreference: { // root type
+    preferenceId: string; // ID!
+  }
   Mutation: {};
-  Position: { // root type
-    abbreviation: string; // String!
-    id: string; // ID!
-    name: string; // String!
-    zone?: NexusGenEnums['PositionZone'] | null; // PositionZone
-  }
   Query: {};
-  Team: { // root type
-    city: string; // String!
-    description?: string | null; // String
-    id: string; // ID!
-    logoUrl: string; // String!
-    mainColor: string; // String!
-    name: string; // String!
-    secondColor?: string | null; // String
-    thirdColor?: string | null; // String
-  }
   User: { // root type
+    address: string; // String!
+    cellphone: string; // String!
     email: string; // String!
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
-    teamId?: string | null; // String
     token: string; // String!
   }
 }
@@ -65,76 +52,48 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  MercadoPagoPreference: { // field return type
+    preferenceId: string; // ID!
+  }
   Mutation: { // field return type
     authenticateUser: NexusGenRootTypes['User']; // User!
-    createPosition: NexusGenRootTypes['Position']; // Position!
-    createTeam: NexusGenRootTypes['Team']; // Team!
     registerNewUser: NexusGenRootTypes['User']; // User!
   }
-  Position: { // field return type
-    abbreviation: string; // String!
-    id: string; // ID!
-    name: string; // String!
-    zone: NexusGenEnums['PositionZone'] | null; // PositionZone
-  }
   Query: { // field return type
-    getAllPositions: NexusGenRootTypes['Position'][]; // [Position!]!
-  }
-  Team: { // field return type
-    city: string; // String!
-    description: string | null; // String
-    id: string; // ID!
-    logoUrl: string; // String!
-    mainColor: string; // String!
-    name: string; // String!
-    secondColor: string | null; // String
-    thirdColor: string | null; // String
+    getLastMercadoPagoPreference: NexusGenRootTypes['MercadoPagoPreference']; // MercadoPagoPreference!
   }
   User: { // field return type
+    address: string; // String!
+    cellphone: string; // String!
     email: string; // String!
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
-    teamId: string | null; // String
     token: string; // String!
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  MercadoPagoPreference: { // field return type name
+    preferenceId: 'ID'
+  }
   Mutation: { // field return type name
     authenticateUser: 'User'
-    createPosition: 'Position'
-    createTeam: 'Team'
     registerNewUser: 'User'
   }
-  Position: { // field return type name
-    abbreviation: 'String'
-    id: 'ID'
-    name: 'String'
-    zone: 'PositionZone'
-  }
   Query: { // field return type name
-    getAllPositions: 'Position'
-  }
-  Team: { // field return type name
-    city: 'String'
-    description: 'String'
-    id: 'ID'
-    logoUrl: 'String'
-    mainColor: 'String'
-    name: 'String'
-    secondColor: 'String'
-    thirdColor: 'String'
+    getLastMercadoPagoPreference: 'MercadoPagoPreference'
   }
   User: { // field return type name
+    address: 'String'
+    cellphone: 'String'
     email: 'String'
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
-    teamId: 'String'
     token: 'String'
   }
 }
@@ -145,26 +104,13 @@ export interface NexusGenArgTypes {
       email: string; // String!
       password: string; // String!
     }
-    createPosition: { // args
-      abbreviation: string; // String!
-      name: string; // String!
-      zone: NexusGenEnums['PositionZone']; // PositionZone!
-    }
-    createTeam: { // args
-      city: string; // String!
-      description?: string | null; // String
-      logoUrl: string; // String!
-      mainColor: string; // String!
-      name: string; // String!
-      secondColor?: string | null; // String
-      thirdColor?: string | null; // String
-    }
     registerNewUser: { // args
+      address: string; // String!
+      cellphone: string; // String!
       email: string; // String!
       firstName: string; // String!
       lastName: string; // String!
       password: string; // String!
-      teamId?: string | null; // String
     }
   }
 }
@@ -179,7 +125,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = keyof NexusGenEnums;
+export type NexusGenEnumNames = never;
 
 export type NexusGenInterfaceNames = never;
 
