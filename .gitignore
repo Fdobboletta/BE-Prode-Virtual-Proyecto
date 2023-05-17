@@ -30,3 +30,7 @@ storybook-static
 
 
 *.tsbuildinfo
+
+# Keys
+localhost.crt
+localhost.key

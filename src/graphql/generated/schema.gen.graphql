@@ -2,50 +2,27 @@
 ### Do not make changes to this file directly
 
 
+"""Informacion de link de pago de MercadoPago"""
+type MercadoPagoPreference {
+  preferenceId: ID!
+}
+
 type Mutation {
   authenticateUser(email: String!, password: String!): User!
-  createPosition(abbreviation: String!, name: String!, zone: PositionZone!): Position!
-  createTeam(city: String!, description: String, logoUrl: String!, mainColor: String!, name: String!, secondColor: String, thirdColor: String): Team!
-  registerNewUser(email: String!, firstName: String!, lastName: String!, password: String!, teamId: String): User!
-}
-
-"""Player position on the field"""
-type Position {
-  abbreviation: String!
-  id: ID!
-  name: String!
-  zone: PositionZone
-}
-
-enum PositionZone {
-  ARQ
-  DEF
-  DEL
-  MED
+  registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!): User!
 }
 
 type Query {
-  getAllPositions: [Position!]!
-}
-
-"""Soccer Team"""
-type Team {
-  city: String!
-  description: String
-  id: ID!
-  logoUrl: String!
-  mainColor: String!
-  name: String!
-  secondColor: String
-  thirdColor: String
+  getLastMercadoPagoPreference: MercadoPagoPreference!
 }
 
 """App user"""
 type User {
+  address: String!
+  cellphone: String!
   email: String!
   firstName: String!
   id: ID!
   lastName: String!
-  teamId: String
   token: String!
 }

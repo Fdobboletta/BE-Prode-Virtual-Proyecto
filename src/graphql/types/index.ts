@@ -1,3 +1,2 @@
 export * from './user';
-export * from './position';
-export * from './team';
+export * from './mercado-pago';

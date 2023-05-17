@@ -1,13 +1,15 @@
 import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { UserType } from '../../database/models/userModel';
+import { UserRole, UserType } from '../../database/models/userModel';
 import { dbModels } from '../../server';
+
 type RegisterUserArgs = {
   email: string;
+  password: string;
   firstName: string;
   lastName: string;
-  password: string;
-  teamId?: string | null | undefined;
+  address: string;
+  cellphone: string;
 };
 
 // Generate a JWT token
@@ -30,10 +32,10 @@ export const registerNewUser = async (
       password: hashedPassword,
       firstName: args.firstName,
       lastName: args.lastName,
-      teamId: args.teamId,
+      address: args.address,
+      cellphone: args.cellphone,
+      role: UserRole.PLAYER,
     });
-
-    console.log('user', user);
 
     // Generate JWT token
     const token = generateToken(user.dataValues);
