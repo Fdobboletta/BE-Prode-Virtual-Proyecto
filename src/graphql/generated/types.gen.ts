@@ -40,6 +40,7 @@ export interface NexusGenObjects {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    role: string; // String!
     token: string; // String!
   }
 }
@@ -72,6 +73,7 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
+    role: string; // String!
     token: string; // String!
   }
 }
@@ -94,6 +96,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
+    role: 'String'
     token: 'String'
   }
 }
