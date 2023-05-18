@@ -11,7 +11,8 @@ export const UserObject = objectType({
       t.nonNull.string('lastName'),
       t.nonNull.string('address'),
       t.nonNull.string('cellphone'),
-      t.nonNull.string('token');
+      t.nonNull.string('token'),
+      t.nonNull.string('role');
   },
 });
 
