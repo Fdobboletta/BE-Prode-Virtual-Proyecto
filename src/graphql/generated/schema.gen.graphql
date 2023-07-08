@@ -9,7 +9,9 @@ type MercadoPagoPreference {
 
 type Mutation {
   authenticateUser(email: String!, password: String!): User!
-  registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!): User!
+  changePassword(newPassword: String!, token: String!): String
+  registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!, role: UserRole!, termsAccepted: Boolean!): User!
+  sendResetPasswordEmail(email: String!): String
 }
 
 type Query {
@@ -24,6 +26,11 @@ type User {
   firstName: String!
   id: ID!
   lastName: String!
-  role: String!
+  role: UserRole!
   token: String!
+}
+
+enum UserRole {
+  ADMIN
+  PLAYER
 }

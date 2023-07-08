@@ -1,5 +1,19 @@
-import { mutationField, nonNull, objectType, stringArg } from 'nexus';
+import {
+  booleanArg,
+  enumType,
+  mutationField,
+  nonNull,
+  nullable,
+  objectType,
+  stringArg,
+} from 'nexus';
 import * as service from '../services/user';
+import { UserRole } from '../../database/models/user';
+
+export const UserRoleEnum = enumType({
+  name: 'UserRole',
+  members: UserRole,
+});
 
 export const UserObject = objectType({
   name: 'User',
@@ -12,7 +26,7 @@ export const UserObject = objectType({
       t.nonNull.string('address'),
       t.nonNull.string('cellphone'),
       t.nonNull.string('token'),
-      t.nonNull.string('role');
+      t.nonNull.field('role', { type: nonNull(UserRoleEnum) });
   },
 });
 
@@ -25,9 +39,14 @@ export const registerNewUser = mutationField('registerNewUser', {
     lastName: nonNull(stringArg()),
     address: nonNull(stringArg()),
     cellphone: nonNull(stringArg()),
+    termsAccepted: nonNull(booleanArg()),
+    role: nonNull(UserRoleEnum),
   },
   resolve: async (_, args) => {
-    const response = await service.registerNewUser(args);
+    const response = await service.registerNewUser({
+      ...args,
+      role: args.role as UserRole, // TS error but this is reliable
+    });
 
     return { ...response.user, token: response.token };
   },
@@ -43,5 +62,28 @@ export const authenticateUser = mutationField('authenticateUser', {
     const response = await service.authenticateUser(args);
 
     return { ...response.user, token: response.token };
+  },
+});
+
+export const sendResetPasswordEmail = mutationField('sendResetPasswordEmail', {
+  type: nullable('String'),
+  args: {
+    email: nonNull(stringArg()),
+  },
+  resolve: async (_, args) => {
+    await service.resetPassword({ email: args.email });
+    return null;
+  },
+});
+
+export const changePassword = mutationField('changePassword', {
+  type: nullable('String'),
+  args: {
+    newPassword: nonNull(stringArg()),
+    token: nonNull(stringArg()),
+  },
+  resolve: async (_, args) => {
+    await service.changePassword(args.newPassword, args.token);
+    return null;
   },
 });

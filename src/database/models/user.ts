@@ -1,6 +1,5 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
-import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
-import { RoomType, RoomCreationType } from './room';
+import { DataTypes, Model, Optional } from 'sequelize';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -16,6 +15,7 @@ export interface UserType {
   firstName: string;
   lastName: string;
   role: UserRole;
+  termsAccepted: boolean;
 }
 
 export interface UserCreationType extends Optional<UserType, 'id'> {}
@@ -58,6 +58,11 @@ export const defineUserModel = (sequelizeInstance: SequelizeInstance) => {
         type: DataTypes.ENUM(UserRole.ADMIN, UserRole.PLAYER),
         defaultValue: UserRole.PLAYER,
         allowNull: false,
+      },
+      termsAccepted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
   );
