@@ -1,5 +1,6 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
+import { RoomType, RoomCreationType } from './room';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -17,7 +18,7 @@ export interface UserType {
   role: UserRole;
 }
 
-interface UserCreationType extends Optional<UserType, 'id'> {}
+export interface UserCreationType extends Optional<UserType, 'id'> {}
 
 export const defineUserModel = (sequelizeInstance: SequelizeInstance) => {
   const UserModel = sequelizeInstance.define<Model<UserType, UserCreationType>>(

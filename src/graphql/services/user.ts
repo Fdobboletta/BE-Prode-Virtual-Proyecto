@@ -1,6 +1,6 @@
 import { sign } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { UserRole, UserType } from '../../database/models/userModel';
+import { UserRole, UserType } from '../../database/models/user';
 import { dbModels } from '../../server';
 
 type RegisterUserArgs = {

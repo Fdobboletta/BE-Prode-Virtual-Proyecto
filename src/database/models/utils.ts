@@ -1,5 +1,9 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
-import { defineUserModel } from './userModel';
+import { defineForecastModel } from './forecast';
+import { defineMatchModel } from './match';
+import { defineRoomModel } from './room';
+import { defineUserModel } from './user';
+import { defineUserRoomModel } from './user-room';
 
 export type DbModels = {
   UserModel: ReturnType<typeof defineUserModel>;
@@ -8,10 +12,28 @@ export type DbModels = {
 export const defineModels = (
   sequelizeInstance: SequelizeInstance,
 ): DbModels => {
+  const RoomModel = defineRoomModel(sequelizeInstance);
   const UserModel = defineUserModel(sequelizeInstance);
 
-  const allModels = {
+  const UserRoomModel = defineUserRoomModel(
+    sequelizeInstance,
     UserModel,
+    RoomModel,
+  );
+  const MatchModel = defineMatchModel(sequelizeInstance, RoomModel);
+
+  const ForecastModel = defineForecastModel(
+    sequelizeInstance,
+    MatchModel,
+    UserModel,
+  );
+
+  const allModels = {
+    RoomModel,
+    UserModel,
+    UserRoomModel,
+    MatchModel,
+    ForecastModel,
   };
 
   return allModels;
