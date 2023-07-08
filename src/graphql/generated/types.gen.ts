@@ -17,6 +17,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  UserRole: "admin" | "player"
 }
 
 export interface NexusGenScalars {
@@ -40,7 +41,7 @@ export interface NexusGenObjects {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
-    role: string; // String!
+    role: NexusGenEnums['UserRole']; // UserRole!
     token: string; // String!
   }
 }
@@ -53,7 +54,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   MercadoPagoPreference: { // field return type
@@ -61,7 +62,9 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     authenticateUser: NexusGenRootTypes['User']; // User!
+    changePassword: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
+    sendResetPasswordEmail: string | null; // String
   }
   Query: { // field return type
     getLastMercadoPagoPreference: NexusGenRootTypes['MercadoPagoPreference']; // MercadoPagoPreference!
@@ -73,7 +76,7 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     id: string; // ID!
     lastName: string; // String!
-    role: string; // String!
+    role: NexusGenEnums['UserRole']; // UserRole!
     token: string; // String!
   }
 }
@@ -84,7 +87,9 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     authenticateUser: 'User'
+    changePassword: 'String'
     registerNewUser: 'User'
+    sendResetPasswordEmail: 'String'
   }
   Query: { // field return type name
     getLastMercadoPagoPreference: 'MercadoPagoPreference'
@@ -96,7 +101,7 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     id: 'ID'
     lastName: 'String'
-    role: 'String'
+    role: 'UserRole'
     token: 'String'
   }
 }
@@ -107,6 +112,10 @@ export interface NexusGenArgTypes {
       email: string; // String!
       password: string; // String!
     }
+    changePassword: { // args
+      newPassword: string; // String!
+      token: string; // String!
+    }
     registerNewUser: { // args
       address: string; // String!
       cellphone: string; // String!
@@ -114,6 +123,11 @@ export interface NexusGenArgTypes {
       firstName: string; // String!
       lastName: string; // String!
       password: string; // String!
+      role: NexusGenEnums['UserRole']; // UserRole!
+      termsAccepted: boolean; // Boolean!
+    }
+    sendResetPasswordEmail: { // args
+      email: string; // String!
     }
   }
 }
@@ -128,7 +142,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
