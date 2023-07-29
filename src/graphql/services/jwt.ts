@@ -35,3 +35,17 @@ export const decodeResetPasswordToken = (
     email: string;
   };
 };
+
+export const isJwtValid = (token: string, isResetPassword: boolean) => {
+  try {
+    verify(
+      token,
+      isResetPassword
+        ? process.env.RESET_PASSWORD_SECRET || ''
+        : process.env.JWT_SECRET || '',
+    );
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

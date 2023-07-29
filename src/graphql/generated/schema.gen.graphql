@@ -16,6 +16,7 @@ type Mutation {
 
 type Query {
   getLastMercadoPagoPreference: MercadoPagoPreference!
+  validateToken(isResetPassword: Boolean!, token: String!): Boolean!
 }
 
 """App user"""
