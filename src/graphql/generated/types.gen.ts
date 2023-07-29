@@ -68,6 +68,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     getLastMercadoPagoPreference: NexusGenRootTypes['MercadoPagoPreference']; // MercadoPagoPreference!
+    validateToken: boolean; // Boolean!
   }
   User: { // field return type
     address: string; // String!
@@ -93,6 +94,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     getLastMercadoPagoPreference: 'MercadoPagoPreference'
+    validateToken: 'Boolean'
   }
   User: { // field return type name
     address: 'String'
@@ -128,6 +130,12 @@ export interface NexusGenArgTypes {
     }
     sendResetPasswordEmail: { // args
       email: string; // String!
+    }
+  }
+  Query: {
+    validateToken: { // args
+      isResetPassword: boolean; // Boolean!
+      token: string; // String!
     }
   }
 }
