@@ -136,9 +136,6 @@ export interface NexusGenArgTypes {
       newPassword: string; // String!
       token: string; // String!
     }
-    disconnectMercadoPagoIntegration: { // args
-      mercadoPagoCode: string; // String!
-    }
     registerNewUser: { // args
       address: string; // String!
       cellphone: string; // String!

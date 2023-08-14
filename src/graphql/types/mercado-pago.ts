@@ -49,9 +49,6 @@ export const disconnectMercadoPagoIntegration = mutationField(
   'disconnectMercadoPagoIntegration',
   {
     type: nullable('String'),
-    args: {
-      mercadoPagoCode: nonNull(stringArg()),
-    },
     resolve: async (_, args, ctx) => {
       await services.disconnectMercadoPagoIntegration(ctx.userId || '');
       return null;
