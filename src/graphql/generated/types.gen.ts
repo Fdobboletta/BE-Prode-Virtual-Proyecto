@@ -70,6 +70,7 @@ export interface NexusGenFieldTypes {
     authenticateUser: NexusGenRootTypes['User']; // User!
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
+    disconnectMercadoPagoIntegration: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
   }
@@ -101,6 +102,7 @@ export interface NexusGenFieldTypeNames {
     authenticateUser: 'User'
     authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
+    disconnectMercadoPagoIntegration: 'String'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
   }
@@ -133,6 +135,9 @@ export interface NexusGenArgTypes {
     changePassword: { // args
       newPassword: string; // String!
       token: string; // String!
+    }
+    disconnectMercadoPagoIntegration: { // args
+      mercadoPagoCode: string; // String!
     }
     registerNewUser: { // args
       address: string; // String!

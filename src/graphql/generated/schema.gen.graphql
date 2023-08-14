@@ -16,6 +16,7 @@ type Mutation {
   authenticateUser(email: String!, password: String!): User!
   authorizeMercadoPago(mercadoPagoCode: String!): MercadoPagoAccessToken
   changePassword(newPassword: String!, token: String!): String
+  disconnectMercadoPagoIntegration(mercadoPagoCode: String!): String
   registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!, role: UserRole!, termsAccepted: Boolean!): User!
   sendResetPasswordEmail(email: String!): String
 }

@@ -64,3 +64,19 @@ export const getMercadoPagoAccessToken = async (
     throw new Error('Error al obtener el token de acceso');
   }
 };
+
+export const disconnectMercadoPagoIntegration = async (
+  userId: string,
+): Promise<void> => {
+  try {
+    const user = await dbModels.UserModel.findByPk(userId);
+
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    await user.update({ mercadoPagoAccessToken: undefined });
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error al desconectar la integracion con Mercado Pago');
+  }
+};

@@ -2,14 +2,12 @@ import axios from 'axios';
 import {
   mutationField,
   nonNull,
+  nullable,
   objectType,
   queryField,
   stringArg,
 } from 'nexus';
-import {
-  getMercadoPagoPreferenceId,
-  getMercadoPagoAccessToken,
-} from '../services/mercado-pago';
+import * as services from '../services/mercado-pago';
 
 export const MercadoPagoPreferenceObject = objectType({
   name: 'MercadoPagoPreference',
@@ -31,7 +29,7 @@ export const getLastMercadoPagoPreference = queryField(
   'getLastMercadoPagoPreference',
   {
     type: nonNull(MercadoPagoPreferenceObject),
-    resolve: async () => getMercadoPagoPreferenceId(),
+    resolve: async () => services.getMercadoPagoPreferenceId(),
   },
 );
 
@@ -41,5 +39,22 @@ export const authorizeMercadoPago = mutationField('authorizeMercadoPago', {
     mercadoPagoCode: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) =>
-    await getMercadoPagoAccessToken(args.mercadoPagoCode, ctx.userId || ''),
+    await services.getMercadoPagoAccessToken(
+      args.mercadoPagoCode,
+      ctx.userId || '',
+    ),
 });
+
+export const disconnectMercadoPagoIntegration = mutationField(
+  'disconnectMercadoPagoIntegration',
+  {
+    type: nullable('String'),
+    args: {
+      mercadoPagoCode: nonNull(stringArg()),
+    },
+    resolve: async (_, args, ctx) => {
+      await services.disconnectMercadoPagoIntegration(ctx.userId || '');
+      return null;
+    },
+  },
+);
