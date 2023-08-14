@@ -129,7 +129,6 @@ export interface NexusGenArgTypes {
     }
     authorizeMercadoPago: { // args
       mercadoPagoCode: string; // String!
-      userId: string; // String!
     }
     changePassword: { // args
       newPassword: string; // String!

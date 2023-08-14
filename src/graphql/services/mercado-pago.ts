@@ -1,5 +1,8 @@
+import axios from 'axios';
+import { NotFoundError, UnknownError } from '../../custom-errors';
 import mercadopago from 'mercadopago';
 import { CreatePreferencePayload } from 'mercadopago/models/preferences/create-payload.model';
+import { dbModels } from '../../server';
 
 export const getMercadoPagoPreferenceId = async (): Promise<{
   preferenceId: string;
@@ -24,4 +27,40 @@ export const getMercadoPagoPreferenceId = async (): Promise<{
   );
 
   return { preferenceId: preference.body.id };
+};
+
+export const getMercadoPagoAccessToken = async (
+  mercadoPagoCode: string,
+  userId: string,
+): Promise<{
+  accessToken: string;
+}> => {
+  try {
+    const user = await dbModels.UserModel.findByPk(userId);
+
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+
+    const redirectUri = 'https://comuniprode.netlify.app/admin/integrations';
+    const response = await axios.post(
+      'https://api.mercadopago.com/oauth/token',
+      {
+        grant_type: 'authorization_code',
+        client_id: process.env.MERCADO_PAGO_CLIENT_ID,
+        client_secret: process.env.MERCADO_PAGO_CLIENT_SECRET,
+        code: mercadoPagoCode,
+        redirect_uri: redirectUri,
+      },
+    );
+
+    if (!response.data) {
+      throw new UnknownError('Error al solicitar el codigo a Mercado Pago');
+    }
+    await user.update({ mercadoPagoAccessToken: response.data.access_token });
+    return { accessToken: response.data.access_token };
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error al obtener el token de acceso');
+  }
 };
