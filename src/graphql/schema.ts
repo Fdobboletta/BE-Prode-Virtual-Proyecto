@@ -6,10 +6,9 @@ import * as typeDefs from './types';
 export const schema = makeSchema({
   types: typeDefs,
   contextType: {
-    module: require.resolve('./context'),
-    export: 'GqlContext',
+    module: path.join(__dirname, './context.ts'),
+    export: 'Context',
   },
-
   outputs: {
     schema: path.join(DIRECTORIES.gqlGenerated, 'schema.gen.graphql'),
     typegen: path.join(DIRECTORIES.gqlGenerated, 'types.gen.ts'),

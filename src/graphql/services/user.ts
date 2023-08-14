@@ -170,3 +170,16 @@ export const changePassword = async (
     throw new Error('Unable to change password.');
   }
 };
+
+export const getUserMpAccessToken = async (userId: string) => {
+  try {
+    const user = await dbModels.UserModel.findByPk(userId);
+    if (!user) {
+      throw new NotFoundError('User not found');
+    }
+    return user.dataValues.mercadoPagoAccessToken;
+  } catch (error) {
+    console.error('Error getting user Mp access token:', error);
+    throw new Error('Unable get user MP access token.');
+  }
+};

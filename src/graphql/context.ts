@@ -1,36 +1,17 @@
-import { sequelizeInstance } from '../database/index';
-import _ from 'lodash/fp';
+import { IncomingHttpHeaders } from 'http';
+import { decodeUserToken } from './services/jwt';
 
-export type GqlContext = Readonly<{
-  user: {} | undefined;
-  sequelizeInstance: typeof sequelizeInstance;
-}>;
+export interface Context {
+  req: {
+    headers: IncomingHttpHeaders;
+  };
+  userId: string | null;
+}
 
-// export const extractHttpAuth = (input: HttpContext): string | undefined =>
-//   _.get(['ctx', 'request', 'header', 'authorization'], input) ||
-//   _.get(['ctx', 'request', 'header', 'Authorization'], input);
+export const createContext = ({ req }: { req: any }): Context => {
+  const token = req.headers.authorization;
 
-export const createGQLContext = async (
-  authorization: string | undefined,
-): Promise<GqlContext> => {
-  if (!authorization) {
-    return {
-      user: undefined,
-      sequelizeInstance,
-    };
-  }
+  const { userId } = decodeUserToken(token.replace('Bearer ', ''));
 
-  try {
-    const user = {};
-
-    return {
-      user,
-      sequelizeInstance,
-    };
-  } catch {
-    return {
-      user: undefined,
-      sequelizeInstance,
-    };
-  }
+  return { req, userId };
 };

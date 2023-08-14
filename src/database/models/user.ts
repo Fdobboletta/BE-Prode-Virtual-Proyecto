@@ -16,9 +16,11 @@ export interface UserType {
   lastName: string;
   role: UserRole;
   termsAccepted: boolean;
+  mercadoPagoAccessToken: string;
 }
 
-export interface UserCreationType extends Optional<UserType, 'id'> {}
+export interface UserCreationType
+  extends Optional<UserType, 'id' | 'mercadoPagoAccessToken'> {}
 
 export const defineUserModel = (sequelizeInstance: SequelizeInstance) => {
   const UserModel = sequelizeInstance.define<Model<UserType, UserCreationType>>(
@@ -63,6 +65,10 @@ export const defineUserModel = (sequelizeInstance: SequelizeInstance) => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+      },
+      mercadoPagoAccessToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
   );

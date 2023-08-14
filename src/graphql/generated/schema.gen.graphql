@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+"""Token de acceso a Mercado Pago"""
+type MercadoPagoAccessToken {
+  accessToken: String!
+}
+
 """Informacion de link de pago de MercadoPago"""
 type MercadoPagoPreference {
   preferenceId: ID!
@@ -9,7 +14,9 @@ type MercadoPagoPreference {
 
 type Mutation {
   authenticateUser(email: String!, password: String!): User!
+  authorizeMercadoPago(mercadoPagoCode: String!, userId: String!): MercadoPagoAccessToken
   changePassword(newPassword: String!, token: String!): String
+  getUserMpAccessToken: String
   registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!, role: UserRole!, termsAccepted: Boolean!): User!
   sendResetPasswordEmail(email: String!): String
 }

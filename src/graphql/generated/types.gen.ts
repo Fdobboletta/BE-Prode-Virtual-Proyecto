@@ -4,7 +4,7 @@
  */
 
 
-import type { GqlContext } from "./../context"
+import type { Context } from "./../context"
 
 
 
@@ -29,6 +29,9 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  MercadoPagoAccessToken: { // root type
+    accessToken: string; // String!
+  }
   MercadoPagoPreference: { // root type
     preferenceId: string; // ID!
   }
@@ -57,12 +60,17 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  MercadoPagoAccessToken: { // field return type
+    accessToken: string; // String!
+  }
   MercadoPagoPreference: { // field return type
     preferenceId: string; // ID!
   }
   Mutation: { // field return type
     authenticateUser: NexusGenRootTypes['User']; // User!
+    authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
+    getUserMpAccessToken: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
   }
@@ -83,12 +91,17 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  MercadoPagoAccessToken: { // field return type name
+    accessToken: 'String'
+  }
   MercadoPagoPreference: { // field return type name
     preferenceId: 'ID'
   }
   Mutation: { // field return type name
     authenticateUser: 'User'
+    authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
+    getUserMpAccessToken: 'String'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
   }
@@ -113,6 +126,10 @@ export interface NexusGenArgTypes {
     authenticateUser: { // args
       email: string; // String!
       password: string; // String!
+    }
+    authorizeMercadoPago: { // args
+      mercadoPagoCode: string; // String!
+      userId: string; // String!
     }
     changePassword: { // args
       newPassword: string; // String!
@@ -171,7 +188,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: GqlContext;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;
