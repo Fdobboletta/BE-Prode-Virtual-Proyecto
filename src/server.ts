@@ -14,9 +14,7 @@ const PORT = process.env.PORT || 4000;
 // Define the ApolloServer
 const server = new ApolloServer({
   schema,
-  context: (ctx) => {
-    createContext(ctx);
-  },
+  context: (ctx) => createContext(ctx),
   introspection: true,
 });
 
