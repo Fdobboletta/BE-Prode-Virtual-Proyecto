@@ -74,7 +74,7 @@ export const disconnectMercadoPagoIntegration = async (
     if (!user) {
       throw new NotFoundError('User not found');
     }
-    await user.update({ mercadoPagoAccessToken: undefined });
+    await user.update({ mercadoPagoAccessToken: null });
   } catch (error) {
     console.log(error);
     throw new Error('Error al desconectar la integracion con Mercado Pago');

@@ -16,7 +16,7 @@ export interface UserType {
   lastName: string;
   role: UserRole;
   termsAccepted: boolean;
-  mercadoPagoAccessToken: string;
+  mercadoPagoAccessToken: string | null;
 }
 
 export interface UserCreationType
@@ -67,7 +67,7 @@ export const defineUserModel = (sequelizeInstance: SequelizeInstance) => {
         defaultValue: false,
       },
       mercadoPagoAccessToken: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING || null,
         allowNull: true,
       },
     },
