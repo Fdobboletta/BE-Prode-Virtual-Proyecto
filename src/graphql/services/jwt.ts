@@ -1,4 +1,4 @@
-import { sign, verify } from 'jsonwebtoken';
+import { JsonWebTokenError, sign, verify } from 'jsonwebtoken';
 import { UserType } from '../../database/models/user';
 
 type ResetPasswordTokenPayload = {
@@ -34,6 +34,27 @@ export const decodeResetPasswordToken = (
     userId: string;
     email: string;
   };
+};
+
+export const decodeUserToken = (
+  token: string,
+): {
+  userId: string;
+  email: string;
+} => {
+  try {
+    const { userId, email } = verify(token, process.env.JWT_SECRET || '') as {
+      userId: string;
+      email: string;
+    };
+
+    return { userId, email };
+  } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      throw new Error('Invalid token: ' + error.message);
+    }
+    throw error;
+  }
 };
 
 export const isJwtValid = (token: string, isResetPassword: boolean) => {

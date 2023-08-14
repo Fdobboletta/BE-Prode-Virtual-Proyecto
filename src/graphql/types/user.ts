@@ -87,3 +87,10 @@ export const changePassword = mutationField('changePassword', {
     return null;
   },
 });
+
+export const getUserMpAccessToken = mutationField('getUserMpAccessToken', {
+  type: nullable('String'),
+  resolve: async (_, args, ctx) => {
+    return service.getUserMpAccessToken(ctx.userId || '');
+  },
+});

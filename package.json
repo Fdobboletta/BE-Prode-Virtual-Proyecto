@@ -25,10 +25,12 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.0",
     "@types/mercadopago": "^1.5.8",
     "@types/nodemailer": "^6.4.8",
     "apollo-server-express": "^3.12.0",
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

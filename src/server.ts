@@ -4,7 +4,7 @@ import https from 'https';
 import 'dotenv/config';
 import { ApolloServer } from 'apollo-server-express';
 import { schema } from './graphql/schema';
-import { createGQLContext } from './graphql/context';
+import { createContext } from './graphql/context';
 import { connectDatabase, sequelizeInstance } from './database';
 import { defineModels } from './database/models/utils';
 
@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 4000;
 const server = new ApolloServer({
   schema,
   context: (ctx) => {
-    createGQLContext(undefined);
+    createContext(ctx);
   },
   introspection: true,
 });
