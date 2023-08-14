@@ -5,6 +5,7 @@ import {
   nonNull,
   nullable,
   objectType,
+  queryField,
   stringArg,
 } from 'nexus';
 import * as service from '../services/user';
@@ -88,7 +89,7 @@ export const changePassword = mutationField('changePassword', {
   },
 });
 
-export const getUserMpAccessToken = mutationField('getUserMpAccessToken', {
+export const getUserMpAccessToken = queryField('getUserMpAccessToken', {
   type: nullable('String'),
   resolve: async (_, args, ctx) => {
     return service.getUserMpAccessToken(ctx.userId || '');

@@ -70,12 +70,12 @@ export interface NexusGenFieldTypes {
     authenticateUser: NexusGenRootTypes['User']; // User!
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
-    getUserMpAccessToken: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
   }
   Query: { // field return type
     getLastMercadoPagoPreference: NexusGenRootTypes['MercadoPagoPreference']; // MercadoPagoPreference!
+    getUserMpAccessToken: string | null; // String
     validateToken: boolean; // Boolean!
   }
   User: { // field return type
@@ -101,12 +101,12 @@ export interface NexusGenFieldTypeNames {
     authenticateUser: 'User'
     authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
-    getUserMpAccessToken: 'String'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
   }
   Query: { // field return type name
     getLastMercadoPagoPreference: 'MercadoPagoPreference'
+    getUserMpAccessToken: 'String'
     validateToken: 'Boolean'
   }
   User: { // field return type name
