@@ -136,7 +136,9 @@ export const resetPassword = async (args: ResetPasswordArgs): Promise<void> => {
     await sendResetPasswordEmail(user.dataValues.email, resetPasswordToken);
   } catch (err) {
     console.log(err);
-    throw new UnknownError('Unable to reset password.');
+    throw new UnknownError(
+      'El email ingresado no corresponde a un usuario registrado',
+    );
   }
 };
 
