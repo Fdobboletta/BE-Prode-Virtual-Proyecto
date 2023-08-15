@@ -15,13 +15,18 @@ export const sendResetPasswordEmail = async (
       },
     });
 
+    const urlPrefix =
+      process.env.NODE_ENV === 'local'
+        ? 'http://localhost:5173/'
+        : 'https://comuniprode.netlify.app/';
+
     // Define the email content
     const mailOptions = {
       from: 'comuniprode@gmail.com',
       to: email,
       subject: 'Reset Your Password - Comuniprode',
-      text: `Click the following link to reset your password: http://example.com/reset-password?token=${resetPasswordToken}`,
-      html: `<p>Click the following link to reset your password: <a href="http://example.com/reset-password?token=${resetPasswordToken}">Reset Password</a></p>`,
+      text: `Click the following link to reset your password: ${urlPrefix}change-password?token=${resetPasswordToken}`,
+      html: `<p>Click the following link to reset your password: <a href="${urlPrefix}change-password?token=${resetPasswordToken}">Reset Password</a></p>`,
     };
 
     await transporter.sendMail(mailOptions);
