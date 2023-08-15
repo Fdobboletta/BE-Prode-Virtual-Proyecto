@@ -99,7 +99,7 @@ export const authenticateUser = async (
     });
 
     if (!user) {
-      throw new NotFoundError('Invalid email or password.');
+      throw new NotFoundError('Email o contraseña incorrectos');
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -108,7 +108,7 @@ export const authenticateUser = async (
     );
 
     if (!passwordMatch) {
-      throw new UnauthorizedError('Invalid email or password.');
+      throw new UnauthorizedError('Email o contraseña incorrectos');
     }
 
     const token = generateRegisterToken(user.dataValues);
@@ -117,7 +117,7 @@ export const authenticateUser = async (
   } catch (err) {
     console.error(err);
 
-    throw new AuthenticationError('Unable to authenticate user.');
+    throw new AuthenticationError('Email o contraseña incorrectos');
   }
 };
 
