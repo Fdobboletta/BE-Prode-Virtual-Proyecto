@@ -14,7 +14,10 @@ export class BadRequestError extends CustomError {
 
 export class DuplicateEmailError extends CustomError {
   constructor() {
-    super('Email already registered.', 409);
+    super(
+      'El email ingresado se encuentra en uso. Por favor seleccione uno diferente',
+      409,
+    );
   }
 }
 
