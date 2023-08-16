@@ -40,8 +40,6 @@ export const getMercadoPagoPreferenceId = async ({
       },
     );
 
-    console.log('PREFERENCE BODY FROM AXIOS', response.data);
-
     return response.data.init_point;
   } catch (error: any) {
     throw new Error(
