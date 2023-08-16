@@ -76,6 +76,19 @@ export const activateRoom = async (roomId: string): Promise<RoomType> => {
   }
 };
 
+export const deleteRoom = async (roomId: string): Promise<void> => {
+  try {
+    const room = await dbModels.RoomModel.findByPk(roomId);
+    if (!room) {
+      throw new NotFoundError('Sala no encontrada o inexistente.');
+    }
+    await room.destroy();
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(`No fue posible eliminar la sala: ${error.message}`);
+  }
+};
+
 export const getRoomsByCreatorId = async (
   creatorId: string,
 ): Promise<RoomType[]> => {

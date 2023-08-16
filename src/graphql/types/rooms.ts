@@ -6,6 +6,7 @@ import {
   list,
   mutationField,
   nonNull,
+  nullable,
   objectType,
   queryField,
   stringArg,
@@ -69,5 +70,16 @@ export const activateRoom = mutationField('activateRoom', {
   resolve: async (_, args) => {
     const updatedRoom = await services.activateRoom(args.roomId);
     return { ...updatedRoom, dueDate: formatISO(updatedRoom.dueDate) };
+  },
+});
+
+export const deleteRoom = mutationField('deleteRoom', {
+  type: nullable('String'),
+  args: {
+    roomId: nonNull(stringArg()),
+  },
+  resolve: async (_, args) => {
+    await services.deleteRoom(args.roomId);
+    return null;
   },
 });

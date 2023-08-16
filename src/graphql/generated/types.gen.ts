@@ -81,6 +81,7 @@ export interface NexusGenFieldTypes {
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
     createRoom: NexusGenRootTypes['Room']; // Room!
+    deleteRoom: string | null; // String
     disconnectMercadoPagoIntegration: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
@@ -124,6 +125,7 @@ export interface NexusGenFieldTypeNames {
     authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
     createRoom: 'Room'
+    deleteRoom: 'String'
     disconnectMercadoPagoIntegration: 'String'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
@@ -176,6 +178,9 @@ export interface NexusGenArgTypes {
       isActive: boolean; // Boolean!
       name: string; // String!
       prizeMoney: number; // Float!
+    }
+    deleteRoom: { // args
+      roomId: string; // String!
     }
     registerNewUser: { // args
       address: string; // String!
