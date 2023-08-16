@@ -60,3 +60,14 @@ export const getRoomsByUserId = queryField('getRoomsByUserId', {
     }));
   },
 });
+
+export const activateRoom = mutationField('activateRoom', {
+  type: nonNull(RoomObject),
+  args: {
+    roomId: nonNull(stringArg()),
+  },
+  resolve: async (_, args) => {
+    const updatedRoom = await services.activateRoom(args.roomId);
+    return { ...updatedRoom, dueDate: formatISO(updatedRoom.dueDate) };
+  },
+});

@@ -62,6 +62,20 @@ export const createNewRoom = async (
   }
 };
 
+export const activateRoom = async (roomId: string): Promise<RoomType> => {
+  try {
+    const room = await dbModels.RoomModel.findByPk(roomId);
+    if (!room) {
+      throw new NotFoundError('Sala no encontrada o inexistente.');
+    }
+    await room.update({ isActive: true });
+    return room.dataValues;
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(`No fue posible publicar su sala: ${error.message}`);
+  }
+};
+
 export const getRoomsByCreatorId = async (
   creatorId: string,
 ): Promise<RoomType[]> => {

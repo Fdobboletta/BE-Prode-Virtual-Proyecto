@@ -13,6 +13,7 @@ type MercadoPagoPreference {
 }
 
 type Mutation {
+  activateRoom(roomId: String!): Room!
   authenticateUser(email: String!, password: String!): User!
   authorizeMercadoPago(mercadoPagoCode: String!): MercadoPagoAccessToken
   changePassword(newPassword: String!, token: String!): String

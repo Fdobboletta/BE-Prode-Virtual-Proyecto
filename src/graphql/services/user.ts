@@ -181,7 +181,7 @@ export const getUserMpAccessToken = async (userId: string) => {
     if (!user) {
       throw new NotFoundError('User not found');
     }
-    console.log('user', user);
+
     return user.dataValues.mercadoPagoAccessToken;
   } catch (error) {
     console.error('Error getting user Mp access token:', error);

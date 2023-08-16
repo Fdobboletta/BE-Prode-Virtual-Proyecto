@@ -76,6 +76,7 @@ export interface NexusGenFieldTypes {
     preferenceId: string; // ID!
   }
   Mutation: { // field return type
+    activateRoom: NexusGenRootTypes['Room']; // Room!
     authenticateUser: NexusGenRootTypes['User']; // User!
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
@@ -118,6 +119,7 @@ export interface NexusGenFieldTypeNames {
     preferenceId: 'ID'
   }
   Mutation: { // field return type name
+    activateRoom: 'Room'
     authenticateUser: 'User'
     authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
@@ -154,6 +156,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    activateRoom: { // args
+      roomId: string; // String!
+    }
     authenticateUser: { // args
       email: string; // String!
       password: string; // String!
