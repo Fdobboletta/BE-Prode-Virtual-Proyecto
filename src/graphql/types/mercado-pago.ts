@@ -1,12 +1,4 @@
-import axios from 'axios';
-import {
-  mutationField,
-  nonNull,
-  nullable,
-  objectType,
-  queryField,
-  stringArg,
-} from 'nexus';
+import { mutationField, nonNull, nullable, objectType, stringArg } from 'nexus';
 import * as services from '../services/mercado-pago';
 
 export const MercadoPagoPreferenceObject = objectType({
@@ -24,14 +16,6 @@ export const MercadoPagoAccessToken = objectType({
     t.nonNull.string('accessToken');
   },
 });
-
-export const getLastMercadoPagoPreference = queryField(
-  'getLastMercadoPagoPreference',
-  {
-    type: nonNull(MercadoPagoPreferenceObject),
-    resolve: async () => services.getMercadoPagoPreferenceId(),
-  },
-);
 
 export const authorizeMercadoPago = mutationField('authorizeMercadoPago', {
   type: MercadoPagoAccessToken,

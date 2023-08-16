@@ -1,32 +1,53 @@
 import axios from 'axios';
 import { NotFoundError, UnknownError } from '../../custom-errors';
-import mercadopago from 'mercadopago';
+
 import { CreatePreferencePayload } from 'mercadopago/models/preferences/create-payload.model';
 import { dbModels } from '../../server';
 
-export const getMercadoPagoPreferenceId = async (): Promise<{
-  preferenceId: string;
-}> => {
-  mercadopago.configure({
-    access_token: process.env.MERCADO_PAGO_ACCESS_TOKEN || '',
-  });
+export const getMercadoPagoPreferenceId = async ({
+  user_access_token,
+  entry_price,
+  name,
+}: {
+  user_access_token: string | null;
+  entry_price: number;
+  name: string;
+}): Promise<string> => {
+  try {
+    if (!user_access_token) {
+      throw new NotFoundError('El access token no existe o es incorrecto');
+    }
 
-  const createPreferencePayload: CreatePreferencePayload = {
-    items: [
+    const createPreferencePayload: CreatePreferencePayload = {
+      items: [
+        {
+          title: `Sala PRODE: ${name}`,
+          unit_price: entry_price,
+          currency_id: 'ARS',
+          quantity: 1,
+        },
+      ],
+    };
+
+    const response = await axios.post(
+      'https://api.mercadopago.com/checkout/preferences',
+      createPreferencePayload,
       {
-        title: 'PRODE',
-        unit_price: 200,
-        currency_id: 'ARS',
-        quantity: 1,
+        headers: {
+          Authorization: `Bearer ${user_access_token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    ],
-  };
+    );
 
-  const preference = await mercadopago.preferences.create(
-    createPreferencePayload,
-  );
+    console.log('PREFERENCE BODY FROM AXIOS', response.data);
 
-  return { preferenceId: preference.body.id };
+    return response.data.init_point;
+  } catch (error: any) {
+    throw new Error(
+      `Error al generar la preferencia de MercadoPago: ${error.message}`,
+    );
+  }
 };
 
 export const getMercadoPagoAccessToken = async (
@@ -47,8 +68,8 @@ export const getMercadoPagoAccessToken = async (
       'https://api.mercadopago.com/oauth/token',
       {
         grant_type: 'authorization_code',
-        client_id: process.env.MERCADO_PAGO_CLIENT_ID,
-        client_secret: process.env.MERCADO_PAGO_CLIENT_SECRET,
+        client_id: process.env.TEST_MERCADO_PAGO_CLIENT_ID,
+        client_secret: process.env.TEST_MERCADO_PAGO_CLIENT_SECRET,
         code: mercadoPagoCode,
         redirect_uri: redirectUri,
       },

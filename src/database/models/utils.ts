@@ -7,6 +7,7 @@ import { defineUserRoomModel } from './user-room';
 
 export type DbModels = {
   UserModel: ReturnType<typeof defineUserModel>;
+  RoomModel: ReturnType<typeof defineRoomModel>;
 };
 
 export const defineModels = (

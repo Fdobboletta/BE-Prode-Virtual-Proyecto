@@ -1,5 +1,5 @@
 import { DIRECTORIES } from '../config';
-import { makeSchema, nonNull, queryField } from 'nexus';
+import { makeSchema } from 'nexus';
 import path from 'path';
 import * as typeDefs from './types';
 

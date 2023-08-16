@@ -4,14 +4,15 @@ import { DataTypes, Model, Optional } from 'sequelize';
 export interface RoomType {
   id: string;
   name: string;
-  dueDate: Date;
+  dueDate: string;
   prizeMoney: number;
   entryPrice: number;
   paymentLink: string;
   isActive: boolean;
 }
 
-export interface RoomCreationType extends Optional<RoomType, 'id'> {}
+export interface RoomCreationType
+  extends Optional<RoomType, 'id' | 'paymentLink'> {}
 
 export const defineRoomModel = (sequelizeInstance: SequelizeInstance) => {
   const RoomModel = sequelizeInstance.define<Model<RoomType, RoomCreationType>>(

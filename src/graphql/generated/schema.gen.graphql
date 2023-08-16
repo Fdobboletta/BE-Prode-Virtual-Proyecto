@@ -16,15 +16,26 @@ type Mutation {
   authenticateUser(email: String!, password: String!): User!
   authorizeMercadoPago(mercadoPagoCode: String!): MercadoPagoAccessToken
   changePassword(newPassword: String!, token: String!): String
+  createRoom(dueDate: String!, entryPrice: Float!, isActive: Boolean!, name: String!, prizeMoney: Float!): Room!
   disconnectMercadoPagoIntegration: String
   registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!, role: UserRole!, termsAccepted: Boolean!): User!
   sendResetPasswordEmail(email: String!): String
 }
 
 type Query {
-  getLastMercadoPagoPreference: MercadoPagoPreference!
   getUserMpAccessToken: String
   validateToken(isResetPassword: Boolean!, token: String!): Boolean!
+}
+
+"""Sala de prode"""
+type Room {
+  dueDate: String!
+  entryPrice: Float!
+  id: ID!
+  isActive: Boolean!
+  name: String!
+  paymentLink: String!
+  prizeMoney: Float!
 }
 
 """App user"""

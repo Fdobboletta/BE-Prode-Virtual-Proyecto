@@ -37,6 +37,15 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  Room: { // root type
+    dueDate: string; // String!
+    entryPrice: number; // Float!
+    id: string; // ID!
+    isActive: boolean; // Boolean!
+    name: string; // String!
+    paymentLink: string; // String!
+    prizeMoney: number; // Float!
+  }
   User: { // root type
     address: string; // String!
     cellphone: string; // String!
@@ -70,14 +79,23 @@ export interface NexusGenFieldTypes {
     authenticateUser: NexusGenRootTypes['User']; // User!
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
+    createRoom: NexusGenRootTypes['Room']; // Room!
     disconnectMercadoPagoIntegration: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
   }
   Query: { // field return type
-    getLastMercadoPagoPreference: NexusGenRootTypes['MercadoPagoPreference']; // MercadoPagoPreference!
     getUserMpAccessToken: string | null; // String
     validateToken: boolean; // Boolean!
+  }
+  Room: { // field return type
+    dueDate: string; // String!
+    entryPrice: number; // Float!
+    id: string; // ID!
+    isActive: boolean; // Boolean!
+    name: string; // String!
+    paymentLink: string; // String!
+    prizeMoney: number; // Float!
   }
   User: { // field return type
     address: string; // String!
@@ -102,14 +120,23 @@ export interface NexusGenFieldTypeNames {
     authenticateUser: 'User'
     authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
+    createRoom: 'Room'
     disconnectMercadoPagoIntegration: 'String'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
   }
   Query: { // field return type name
-    getLastMercadoPagoPreference: 'MercadoPagoPreference'
     getUserMpAccessToken: 'String'
     validateToken: 'Boolean'
+  }
+  Room: { // field return type name
+    dueDate: 'String'
+    entryPrice: 'Float'
+    id: 'ID'
+    isActive: 'Boolean'
+    name: 'String'
+    paymentLink: 'String'
+    prizeMoney: 'Float'
   }
   User: { // field return type name
     address: 'String'
@@ -135,6 +162,13 @@ export interface NexusGenArgTypes {
     changePassword: { // args
       newPassword: string; // String!
       token: string; // String!
+    }
+    createRoom: { // args
+      dueDate: string; // String!
+      entryPrice: number; // Float!
+      isActive: boolean; // Boolean!
+      name: string; // String!
+      prizeMoney: number; // Float!
     }
     registerNewUser: { // args
       address: string; // String!

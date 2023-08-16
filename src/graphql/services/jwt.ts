@@ -50,10 +50,7 @@ export const decodeUserToken = (
 
     return { userId, email };
   } catch (error) {
-    if (error instanceof JsonWebTokenError) {
-      throw new Error('Invalid token: ' + error.message);
-    }
-    throw error;
+    throw new Error('Invalid token ');
   }
 };
 
