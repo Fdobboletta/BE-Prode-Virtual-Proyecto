@@ -9,10 +9,11 @@ export interface RoomType {
   entryPrice: number;
   paymentLink: string;
   isActive: boolean;
+  creatorId: string;
 }
 
 export interface RoomCreationType
-  extends Optional<RoomType, 'id' | 'paymentLink'> {}
+  extends Optional<RoomType, 'id' | 'paymentLink' | 'creatorId'> {}
 
 export const defineRoomModel = (sequelizeInstance: SequelizeInstance) => {
   const RoomModel = sequelizeInstance.define<Model<RoomType, RoomCreationType>>(
@@ -47,6 +48,14 @@ export const defineRoomModel = (sequelizeInstance: SequelizeInstance) => {
       isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      creatorId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
     },
   );

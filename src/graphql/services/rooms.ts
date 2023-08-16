@@ -13,7 +13,6 @@ export const createNewRoom = async (
   userId: string,
 ): Promise<RoomType> => {
   try {
-    // Validate input
     if (
       !args.name ||
       args.entryPrice === undefined ||
@@ -42,6 +41,7 @@ export const createNewRoom = async (
       dueDate: args.dueDate,
       paymentLink: mpPreferenceId,
       isActive: args.isActive || false,
+      creatorId: userId,
     });
 
     return room.dataValues;
@@ -51,5 +51,24 @@ export const createNewRoom = async (
       throw error;
     }
     throw new UnknownError();
+  }
+};
+
+export const getRoomsByCreatorId = async (
+  creatorId: string,
+): Promise<RoomType[]> => {
+  try {
+    const rooms = await dbModels.RoomModel.findAll({
+      where: {
+        creatorId,
+      },
+    });
+
+    return rooms.map((room) => room.dataValues);
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(
+      `No se pudieron obtener las salas del usuario: ${error.message}`,
+    );
   }
 };

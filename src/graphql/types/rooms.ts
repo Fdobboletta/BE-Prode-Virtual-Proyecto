@@ -1,10 +1,12 @@
-import { createNewRoom } from '../services/rooms';
+import * as services from '../services/rooms';
 import {
   booleanArg,
   floatArg,
+  list,
   mutationField,
   nonNull,
   objectType,
+  queryField,
   stringArg,
 } from 'nexus';
 
@@ -32,7 +34,7 @@ export const createRoom = mutationField('createRoom', {
     isActive: nonNull(booleanArg()),
   },
   resolve: async (_, args, ctx) => {
-    const newRoom = await createNewRoom(
+    const newRoom = await services.createNewRoom(
       {
         isActive: args.isActive,
         name: args.name,
@@ -43,5 +45,13 @@ export const createRoom = mutationField('createRoom', {
       ctx.userId || '',
     );
     return newRoom;
+  },
+});
+
+export const getRoomsByUserId = queryField('getRoomsByUserId', {
+  type: nonNull(list(nonNull(RoomObject))),
+  resolve: async (_, args, ctx) => {
+    const roomsList = await services.getRoomsByCreatorId(ctx.userId || '');
+    return roomsList;
   },
 });

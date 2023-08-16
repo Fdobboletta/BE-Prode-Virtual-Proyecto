@@ -85,6 +85,7 @@ export interface NexusGenFieldTypes {
     sendResetPasswordEmail: string | null; // String
   }
   Query: { // field return type
+    getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
     getUserMpAccessToken: string | null; // String
     validateToken: boolean; // Boolean!
   }
@@ -126,6 +127,7 @@ export interface NexusGenFieldTypeNames {
     sendResetPasswordEmail: 'String'
   }
   Query: { // field return type name
+    getRoomsByUserId: 'Room'
     getUserMpAccessToken: 'String'
     validateToken: 'Boolean'
   }
