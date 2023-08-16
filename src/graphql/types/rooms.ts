@@ -1,3 +1,4 @@
+import { formatISO } from 'date-fns';
 import * as services from '../services/rooms';
 import {
   booleanArg,
@@ -44,7 +45,7 @@ export const createRoom = mutationField('createRoom', {
       },
       ctx.userId || '',
     );
-    return newRoom;
+    return { ...newRoom, dueDate: formatISO(newRoom.dueDate) };
   },
 });
 
@@ -52,6 +53,10 @@ export const getRoomsByUserId = queryField('getRoomsByUserId', {
   type: nonNull(list(nonNull(RoomObject))),
   resolve: async (_, args, ctx) => {
     const roomsList = await services.getRoomsByCreatorId(ctx.userId || '');
-    return roomsList;
+
+    return roomsList.map((room) => ({
+      ...room,
+      dueDate: formatISO(room.dueDate),
+    }));
   },
 });

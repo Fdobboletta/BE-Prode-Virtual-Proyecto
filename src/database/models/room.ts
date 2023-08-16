@@ -4,7 +4,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 export interface RoomType {
   id: string;
   name: string;
-  dueDate: string;
+  dueDate: Date;
   prizeMoney: number;
   entryPrice: number;
   paymentLink: string;

@@ -8,8 +8,16 @@ import {
 import { dbModels } from '../../server';
 import { getMercadoPagoPreferenceId } from './mercado-pago';
 
+type CreateRoomType = {
+  name: string;
+  dueDate: string;
+  prizeMoney: number;
+  entryPrice: number;
+  isActive: boolean;
+};
+
 export const createNewRoom = async (
-  args: RoomCreationType,
+  args: CreateRoomType,
   userId: string,
 ): Promise<RoomType> => {
   try {
@@ -38,7 +46,7 @@ export const createNewRoom = async (
       name: args.name,
       entryPrice: args.entryPrice,
       prizeMoney: args.prizeMoney,
-      dueDate: args.dueDate,
+      dueDate: new Date(args.dueDate),
       paymentLink: mpPreferenceId,
       isActive: args.isActive || false,
       creatorId: userId,
