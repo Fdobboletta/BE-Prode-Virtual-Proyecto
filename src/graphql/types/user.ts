@@ -10,6 +10,7 @@ import {
 } from 'nexus';
 import * as service from '../services/user';
 import { UserRole } from '../../database/models/user';
+import { UserInputError } from 'apollo-server-express';
 
 export const UserRoleEnum = enumType({
   name: 'UserRole',
@@ -92,6 +93,9 @@ export const changePassword = mutationField('changePassword', {
 export const getUserMpAccessToken = queryField('getUserMpAccessToken', {
   type: nullable('String'),
   resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
     return service.getUserMpAccessToken(ctx.userId || '');
   },
 });

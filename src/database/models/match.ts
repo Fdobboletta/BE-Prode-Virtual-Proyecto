@@ -13,10 +13,14 @@ export interface MatchType {
   homeTeam: string;
   awayTeam: string;
   officialScore: Score;
-  paymentLink: string;
+  startDate: Date;
+  roomId: string;
 }
 
-export interface MatchCreationType extends Optional<MatchType, 'id'> {}
+export interface MatchCreationType
+  extends Optional<MatchType, 'id' | 'officialScore'> {
+  roomId: string;
+}
 
 export const defineMatchModel = (
   sequelizeInstance: SequelizeInstance,
@@ -36,16 +40,22 @@ export const defineMatchModel = (
       unique: true,
     },
     awayTeam: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.STRING,
       allowNull: false,
+    },
+    startDate: {
+      type: DataTypes.DATE,
     },
     officialScore: {
       type: DataTypes.ENUM(Score.HOME, Score.AWAY, Score.DRAW),
-      allowNull: false,
     },
-    paymentLink: {
-      type: DataTypes.STRING,
+    roomId: {
+      type: DataTypes.UUID,
       allowNull: false,
+      references: {
+        model: 'Rooms',
+        key: 'id',
+      },
     },
   });
 

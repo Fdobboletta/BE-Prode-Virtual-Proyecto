@@ -1,5 +1,6 @@
 import { mutationField, nonNull, nullable, objectType, stringArg } from 'nexus';
 import * as services from '../services/mercado-pago';
+import { UserInputError } from 'apollo-server-express';
 
 export const MercadoPagoPreferenceObject = objectType({
   name: 'MercadoPagoPreference',
@@ -22,11 +23,15 @@ export const authorizeMercadoPago = mutationField('authorizeMercadoPago', {
   args: {
     mercadoPagoCode: nonNull(stringArg()),
   },
-  resolve: async (_, args, ctx) =>
-    await services.getMercadoPagoAccessToken(
+  resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
+    return await services.getMercadoPagoAccessToken(
       args.mercadoPagoCode,
       ctx.userId || '',
-    ),
+    );
+  },
 });
 
 export const disconnectMercadoPagoIntegration = mutationField(
@@ -34,6 +39,9 @@ export const disconnectMercadoPagoIntegration = mutationField(
   {
     type: nullable('String'),
     resolve: async (_, args, ctx) => {
+      if (!ctx.userId) {
+        throw new UserInputError('Authentication required');
+      }
       await services.disconnectMercadoPagoIntegration(ctx.userId || '');
       return null;
     },

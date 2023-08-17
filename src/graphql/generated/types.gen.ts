@@ -17,6 +17,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  Score: "away" | "draw" | "home"
   UserRole: "admin" | "player"
 }
 
@@ -29,6 +30,14 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Match: { // root type
+    awayTeam: string; // String!
+    homeTeam: string; // String!
+    id: string; // ID!
+    officialScore: NexusGenEnums['Score']; // Score!
+    roomId: string; // ID!
+    startDate: string; // String!
+  }
   MercadoPagoAccessToken: { // root type
     accessToken: string; // String!
   }
@@ -69,6 +78,14 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Match: { // field return type
+    awayTeam: string; // String!
+    homeTeam: string; // String!
+    id: string; // ID!
+    officialScore: NexusGenEnums['Score']; // Score!
+    roomId: string; // ID!
+    startDate: string; // String!
+  }
   MercadoPagoAccessToken: { // field return type
     accessToken: string; // String!
   }
@@ -80,6 +97,7 @@ export interface NexusGenFieldTypes {
     authenticateUser: NexusGenRootTypes['User']; // User!
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
+    createMatch: NexusGenRootTypes['Match']; // Match!
     createRoom: NexusGenRootTypes['Room']; // Room!
     deleteRoom: string | null; // String
     disconnectMercadoPagoIntegration: string | null; // String
@@ -115,6 +133,14 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Match: { // field return type name
+    awayTeam: 'String'
+    homeTeam: 'String'
+    id: 'ID'
+    officialScore: 'Score'
+    roomId: 'ID'
+    startDate: 'String'
+  }
   MercadoPagoAccessToken: { // field return type name
     accessToken: 'String'
   }
@@ -126,6 +152,7 @@ export interface NexusGenFieldTypeNames {
     authenticateUser: 'User'
     authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
+    createMatch: 'Match'
     createRoom: 'Room'
     deleteRoom: 'String'
     disconnectMercadoPagoIntegration: 'String'
@@ -175,6 +202,12 @@ export interface NexusGenArgTypes {
     changePassword: { // args
       newPassword: string; // String!
       token: string; // String!
+    }
+    createMatch: { // args
+      awayTeam: string; // String!
+      date: string; // String!
+      homeTeam: string; // String!
+      roomId: string; // String!
     }
     createRoom: { // args
       dueDate: string; // String!

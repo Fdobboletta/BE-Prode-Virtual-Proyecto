@@ -2,6 +2,16 @@
 ### Do not make changes to this file directly
 
 
+"""Partido"""
+type Match {
+  awayTeam: String!
+  homeTeam: String!
+  id: ID!
+  officialScore: Score!
+  roomId: ID!
+  startDate: String!
+}
+
 """Token de acceso a Mercado Pago"""
 type MercadoPagoAccessToken {
   accessToken: String!
@@ -17,6 +27,7 @@ type Mutation {
   authenticateUser(email: String!, password: String!): User!
   authorizeMercadoPago(mercadoPagoCode: String!): MercadoPagoAccessToken
   changePassword(newPassword: String!, token: String!): String
+  createMatch(awayTeam: String!, date: String!, homeTeam: String!, roomId: String!): Match!
   createRoom(dueDate: String!, entryPrice: Float!, isActive: Boolean!, name: String!, prizeMoney: Float!): Room!
   deleteRoom(roomId: String!): String
   disconnectMercadoPagoIntegration: String
@@ -41,6 +52,12 @@ type Room {
   name: String!
   paymentLink: String!
   prizeMoney: Float!
+}
+
+enum Score {
+  AWAY
+  DRAW
+  HOME
 }
 
 """App user"""

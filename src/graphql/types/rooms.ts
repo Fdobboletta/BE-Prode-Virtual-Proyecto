@@ -11,6 +11,7 @@ import {
   queryField,
   stringArg,
 } from 'nexus';
+import { UserInputError } from 'apollo-server-express';
 
 export const RoomObject = objectType({
   name: 'Room',
@@ -36,6 +37,9 @@ export const createRoom = mutationField('createRoom', {
     isActive: nonNull(booleanArg()),
   },
   resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
     const newRoom = await services.createNewRoom(
       {
         isActive: args.isActive,
@@ -53,6 +57,9 @@ export const createRoom = mutationField('createRoom', {
 export const getRoomsByUserId = queryField('getRoomsByUserId', {
   type: nonNull(list(nonNull(RoomObject))),
   resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
     const roomsList = await services.getRoomsByCreatorId(ctx.userId || '');
 
     return roomsList.map((room) => ({
@@ -68,6 +75,9 @@ export const getRoomById = queryField('getRoomById', {
     roomId: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
     const room = await services.getRoomById(args.roomId);
 
     return { ...room, dueDate: formatISO(room.dueDate) };
@@ -79,7 +89,10 @@ export const activateRoom = mutationField('activateRoom', {
   args: {
     roomId: nonNull(stringArg()),
   },
-  resolve: async (_, args) => {
+  resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
     const updatedRoom = await services.activateRoom(args.roomId);
     return { ...updatedRoom, dueDate: formatISO(updatedRoom.dueDate) };
   },
@@ -90,7 +103,10 @@ export const deleteRoom = mutationField('deleteRoom', {
   args: {
     roomId: nonNull(stringArg()),
   },
-  resolve: async (_, args) => {
+  resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
     await services.deleteRoom(args.roomId);
     return null;
   },
@@ -107,6 +123,9 @@ export const updateRoom = mutationField('updateRoom', {
     isActive: nonNull(booleanArg()),
   },
   resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
     const updatedRoom = await services.updateRoom(
       args.roomId,
       {
