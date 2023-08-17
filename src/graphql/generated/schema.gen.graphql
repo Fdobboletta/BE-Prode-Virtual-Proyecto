@@ -26,6 +26,7 @@ type Mutation {
 }
 
 type Query {
+  getRoomById(roomId: String!): Room!
   getRoomsByUserId: [Room!]!
   getUserMpAccessToken: String
   validateToken(isResetPassword: Boolean!, token: String!): Boolean!

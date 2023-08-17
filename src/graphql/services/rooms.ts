@@ -108,6 +108,22 @@ export const getRoomsByCreatorId = async (
   }
 };
 
+export const getRoomById = async (roomId: string): Promise<RoomType> => {
+  try {
+    const room = await dbModels.RoomModel.findByPk(roomId);
+    if (!room) {
+      throw new NotFoundError(
+        'No se pudo encontrar la sala con el ID solicitado',
+      );
+    }
+
+    return room.dataValues;
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(`Error: ${error.message}`);
+  }
+};
+
 export const updateRoom = async (
   roomId: string,
   updates: Partial<CreateRoomType>,

@@ -88,6 +88,7 @@ export interface NexusGenFieldTypes {
     updateRoom: NexusGenRootTypes['Room'] | null; // Room
   }
   Query: { // field return type
+    getRoomById: NexusGenRootTypes['Room']; // Room!
     getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
     getUserMpAccessToken: string | null; // String
     validateToken: boolean; // Boolean!
@@ -133,6 +134,7 @@ export interface NexusGenFieldTypeNames {
     updateRoom: 'Room'
   }
   Query: { // field return type name
+    getRoomById: 'Room'
     getRoomsByUserId: 'Room'
     getUserMpAccessToken: 'String'
     validateToken: 'Boolean'
@@ -207,6 +209,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    getRoomById: { // args
+      roomId: string; // String!
+    }
     validateToken: { // args
       isResetPassword: boolean; // Boolean!
       token: string; // String!

@@ -62,6 +62,18 @@ export const getRoomsByUserId = queryField('getRoomsByUserId', {
   },
 });
 
+export const getRoomById = queryField('getRoomById', {
+  type: nonNull(RoomObject),
+  args: {
+    roomId: nonNull(stringArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    const room = await services.getRoomById(args.roomId);
+
+    return { ...room, dueDate: formatISO(room.dueDate) };
+  },
+});
+
 export const activateRoom = mutationField('activateRoom', {
   type: nonNull(RoomObject),
   args: {
