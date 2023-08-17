@@ -45,3 +45,26 @@ export const createMatch = mutationField('createMatch', {
     return { ...newMatch, startDate: formatISO(newMatch.startDate) };
   },
 });
+
+export const updateMatch = mutationField('updateMatch', {
+  type: nonNull(MatchObject),
+  args: {
+    matchId: nonNull(stringArg()),
+    homeTeam: nonNull(stringArg()),
+    awayTeam: nonNull(stringArg()),
+    date: nonNull(stringArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
+
+    const updatedMatch = await services.updateMatch(args.matchId, {
+      homeTeam: args.homeTeam,
+      startDate: args.date,
+      awayTeam: args.awayTeam,
+    });
+
+    return { ...updatedMatch, startDate: formatISO(updatedMatch.startDate) };
+  },
+});

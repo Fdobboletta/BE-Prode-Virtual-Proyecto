@@ -2,6 +2,7 @@ import { MatchType } from '../../database/models/match';
 import {
   BadRequestError,
   CustomError,
+  NotFoundError,
   UnknownError,
 } from '../../custom-errors';
 import { dbModels } from '../../server';
@@ -21,7 +22,6 @@ export const createMatch = async (
       throw new BadRequestError('Todos los campos son requeridos.');
     }
 
-    // Create new room in the database
     const match = await dbModels.MatchModel.create({
       homeTeam: args.homeTeam,
       awayTeam: args.awayTeam,
@@ -35,5 +35,35 @@ export const createMatch = async (
       throw error;
     }
     throw new UnknownError();
+  }
+};
+
+export const updateMatch = async (
+  matchId: string,
+  updates: Partial<CreateMatchArgs>,
+): Promise<MatchType> => {
+  try {
+    const match = await dbModels.MatchModel.findByPk(matchId);
+    if (!match) {
+      throw new NotFoundError('Partido no encontrado o inexistente.');
+    }
+
+    await match.update({
+      homeTeam: updates.homeTeam || match.dataValues.homeTeam,
+      awayTeam: updates.awayTeam || match.dataValues.awayTeam,
+      startDate: updates.startDate
+        ? new Date(updates.startDate)
+        : match.dataValues.startDate,
+    });
+
+    return match.dataValues;
+  } catch (error: any) {
+    console.error(error);
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new UnknownError(
+      `No fue posible actualizar la sala: ${error.message}`,
+    );
   }
 };
