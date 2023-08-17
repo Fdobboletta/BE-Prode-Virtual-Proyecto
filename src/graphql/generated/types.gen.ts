@@ -85,6 +85,7 @@ export interface NexusGenFieldTypes {
     disconnectMercadoPagoIntegration: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
+    updateRoom: NexusGenRootTypes['Room'] | null; // Room
   }
   Query: { // field return type
     getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
@@ -129,6 +130,7 @@ export interface NexusGenFieldTypeNames {
     disconnectMercadoPagoIntegration: 'String'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
+    updateRoom: 'Room'
   }
   Query: { // field return type name
     getRoomsByUserId: 'Room'
@@ -194,6 +196,14 @@ export interface NexusGenArgTypes {
     }
     sendResetPasswordEmail: { // args
       email: string; // String!
+    }
+    updateRoom: { // args
+      dueDate: string; // String!
+      entryPrice: number; // Float!
+      isActive: boolean; // Boolean!
+      name: string; // String!
+      prizeMoney: number; // Float!
+      roomId: string; // String!
     }
   }
   Query: {

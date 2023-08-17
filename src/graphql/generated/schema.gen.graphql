@@ -22,6 +22,7 @@ type Mutation {
   disconnectMercadoPagoIntegration: String
   registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!, role: UserRole!, termsAccepted: Boolean!): User!
   sendResetPasswordEmail(email: String!): String
+  updateRoom(dueDate: String!, entryPrice: Float!, isActive: Boolean!, name: String!, prizeMoney: Float!, roomId: String!): Room
 }
 
 type Query {

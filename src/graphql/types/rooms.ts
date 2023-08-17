@@ -83,3 +83,29 @@ export const deleteRoom = mutationField('deleteRoom', {
     return null;
   },
 });
+
+export const updateRoom = mutationField('updateRoom', {
+  type: nullable(RoomObject),
+  args: {
+    roomId: nonNull(stringArg()),
+    name: nonNull(stringArg()),
+    dueDate: nonNull(stringArg()),
+    prizeMoney: nonNull(floatArg()),
+    entryPrice: nonNull(floatArg()),
+    isActive: nonNull(booleanArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    const updatedRoom = await services.updateRoom(
+      args.roomId,
+      {
+        name: args.name,
+        dueDate: args.dueDate,
+        prizeMoney: args.prizeMoney,
+        entryPrice: args.entryPrice,
+        isActive: args.isActive,
+      },
+      ctx.userId || '',
+    );
+    return { ...updatedRoom, dueDate: formatISO(updatedRoom.dueDate) };
+  },
+});

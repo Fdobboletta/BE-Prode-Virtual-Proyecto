@@ -1,4 +1,4 @@
-import { RoomCreationType, RoomType } from '../../database/models/room';
+import { RoomType } from '../../database/models/room';
 import {
   BadRequestError,
   CustomError,
@@ -104,6 +104,51 @@ export const getRoomsByCreatorId = async (
     console.error(error);
     throw new UnknownError(
       `No se pudieron obtener las salas del usuario: ${error.message}`,
+    );
+  }
+};
+
+export const updateRoom = async (
+  roomId: string,
+  updates: Partial<CreateRoomType>,
+  userId: string,
+): Promise<RoomType> => {
+  try {
+    const room = await dbModels.RoomModel.findByPk(roomId);
+    if (!room) {
+      throw new NotFoundError('Sala no encontrada o inexistente.');
+    }
+
+    const user = await dbModels.UserModel.findByPk(userId);
+    if (!user) {
+      throw new NotFoundError('Usuario no encontrado.');
+    }
+
+    const mpPreferenceId = await getMercadoPagoPreferenceId({
+      user_access_token: user.dataValues.mercadoPagoAccessToken,
+      name: updates.name || room.dataValues.name,
+      entry_price: updates.entryPrice || room.dataValues.entryPrice,
+    });
+
+    await room.update({
+      name: updates.name || room.dataValues.name,
+      entryPrice: updates.entryPrice || room.dataValues.entryPrice,
+      prizeMoney: updates.prizeMoney || room.dataValues.prizeMoney,
+      dueDate: updates.dueDate
+        ? new Date(updates.dueDate)
+        : room.dataValues.dueDate,
+      paymentLink: mpPreferenceId,
+      isActive: updates.isActive || room.dataValues.isActive,
+    });
+
+    return room.dataValues;
+  } catch (error: any) {
+    console.error(error);
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new UnknownError(
+      `No fue posible actualizar la sala: ${error.message}`,
     );
   }
 };
