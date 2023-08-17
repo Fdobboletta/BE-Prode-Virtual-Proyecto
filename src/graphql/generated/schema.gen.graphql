@@ -29,6 +29,7 @@ type Mutation {
   changePassword(newPassword: String!, token: String!): String
   createMatch(awayTeam: String!, date: String!, homeTeam: String!, roomId: String!): Match!
   createRoom(dueDate: String!, entryPrice: Float!, isActive: Boolean!, name: String!, prizeMoney: Float!): Room!
+  deleteMatch(matchId: String!): String
   deleteRoom(roomId: String!): String
   disconnectMercadoPagoIntegration: String
   registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!, role: UserRole!, termsAccepted: Boolean!): User!

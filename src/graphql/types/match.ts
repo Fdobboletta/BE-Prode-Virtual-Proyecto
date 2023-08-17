@@ -1,4 +1,11 @@
-import { enumType, mutationField, nonNull, objectType, stringArg } from 'nexus';
+import {
+  enumType,
+  mutationField,
+  nonNull,
+  nullable,
+  objectType,
+  stringArg,
+} from 'nexus';
 import { Score } from '../../database/models/match';
 import { UserInputError } from 'apollo-server-express';
 import * as services from '../services/match';
@@ -66,5 +73,19 @@ export const updateMatch = mutationField('updateMatch', {
     });
 
     return { ...updatedMatch, startDate: formatISO(updatedMatch.startDate) };
+  },
+});
+
+export const deleteMatch = mutationField('deleteMatch', {
+  type: nullable('String'),
+  args: {
+    matchId: nonNull(stringArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
+    await services.deleteMatch(args.matchId);
+    return null;
   },
 });

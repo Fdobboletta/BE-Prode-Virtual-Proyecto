@@ -63,7 +63,22 @@ export const updateMatch = async (
       throw error;
     }
     throw new UnknownError(
-      `No fue posible actualizar la sala: ${error.message}`,
+      `No fue posible actualizar el spartido: ${error.message}`,
+    );
+  }
+};
+
+export const deleteMatch = async (matchId: string): Promise<void> => {
+  try {
+    const match = await dbModels.MatchModel.findByPk(matchId);
+    if (!match) {
+      throw new NotFoundError('Partido no encontrada o inexistente.');
+    }
+    await match.destroy();
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(
+      `No fue posible eliminar el Partido: ${error.message}`,
     );
   }
 };

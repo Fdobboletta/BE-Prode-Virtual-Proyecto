@@ -99,6 +99,7 @@ export interface NexusGenFieldTypes {
     changePassword: string | null; // String
     createMatch: NexusGenRootTypes['Match']; // Match!
     createRoom: NexusGenRootTypes['Room']; // Room!
+    deleteMatch: string | null; // String
     deleteRoom: string | null; // String
     disconnectMercadoPagoIntegration: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
@@ -155,6 +156,7 @@ export interface NexusGenFieldTypeNames {
     changePassword: 'String'
     createMatch: 'Match'
     createRoom: 'Room'
+    deleteMatch: 'String'
     deleteRoom: 'String'
     disconnectMercadoPagoIntegration: 'String'
     registerNewUser: 'User'
@@ -217,6 +219,9 @@ export interface NexusGenArgTypes {
       isActive: boolean; // Boolean!
       name: string; // String!
       prizeMoney: number; // Float!
+    }
+    deleteMatch: { // args
+      matchId: string; // String!
     }
     deleteRoom: { // args
       roomId: string; // String!
