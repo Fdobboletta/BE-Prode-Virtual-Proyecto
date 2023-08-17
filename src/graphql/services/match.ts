@@ -82,3 +82,22 @@ export const deleteMatch = async (matchId: string): Promise<void> => {
     );
   }
 };
+
+export const getMatchesByRoomId = async (
+  roomId: string,
+): Promise<MatchType[]> => {
+  try {
+    const matches = await dbModels.MatchModel.findAll({
+      where: {
+        roomId,
+      },
+    });
+
+    return matches.map((match) => match.dataValues);
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(
+      `No se pudieron obtener los Partidos  de la Sala: ${error.message}`,
+    );
+  }
+};

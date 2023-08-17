@@ -1,9 +1,11 @@
 import {
   enumType,
+  list,
   mutationField,
   nonNull,
   nullable,
   objectType,
+  queryField,
   stringArg,
 } from 'nexus';
 import { Score } from '../../database/models/match';
@@ -87,5 +89,23 @@ export const deleteMatch = mutationField('deleteMatch', {
     }
     await services.deleteMatch(args.matchId);
     return null;
+  },
+});
+
+export const getMatchesByRoomId = queryField('getMatchesByRoomId', {
+  type: nonNull(list(nonNull(MatchObject))),
+  args: {
+    roomId: nonNull(stringArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
+    const roomsList = await services.getMatchesByRoomId(args.roomId);
+
+    return roomsList.map((room) => ({
+      ...room,
+      startDate: formatISO(room.startDate),
+    }));
   },
 });

@@ -108,6 +108,7 @@ export interface NexusGenFieldTypes {
     updateRoom: NexusGenRootTypes['Room'] | null; // Room
   }
   Query: { // field return type
+    getMatchesByRoomId: NexusGenRootTypes['Match'][]; // [Match!]!
     getRoomById: NexusGenRootTypes['Room']; // Room!
     getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
     getUserMpAccessToken: string | null; // String
@@ -165,6 +166,7 @@ export interface NexusGenFieldTypeNames {
     updateRoom: 'Room'
   }
   Query: { // field return type name
+    getMatchesByRoomId: 'Match'
     getRoomById: 'Room'
     getRoomsByUserId: 'Room'
     getUserMpAccessToken: 'String'
@@ -255,6 +257,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    getMatchesByRoomId: { // args
+      roomId: string; // String!
+    }
     getRoomById: { // args
       roomId: string; // String!
     }
