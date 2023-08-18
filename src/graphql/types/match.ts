@@ -1,5 +1,6 @@
 import {
   enumType,
+  inputObjectType,
   list,
   mutationField,
   nonNull,
@@ -31,6 +32,13 @@ export const MatchObject = objectType({
   },
 });
 
+export const ScoreUpdateInput = inputObjectType({
+  name: 'ScoreUpdateInput',
+  definition: (t) => {
+    t.nonNull.id('matchId');
+    t.field('score', { type: ScoreEnum });
+  },
+});
 export const createMatch = mutationField('createMatch', {
   type: nonNull(MatchObject),
   args: {
@@ -106,6 +114,35 @@ export const getMatchesByRoomId = queryField('getMatchesByRoomId', {
     return roomsList.map((room) => ({
       ...room,
       startDate: formatISO(room.startDate),
+    }));
+  },
+});
+
+export const updateManyMatchScores = mutationField('updateManyMatchScores', {
+  type: nonNull(list(nonNull(MatchObject))),
+  args: {
+    scoreUpdates: nonNull(list(nonNull(ScoreUpdateInput))),
+  },
+  resolve: async (_, args, ctx) => {
+    if (!ctx.userId) {
+      throw new UserInputError('Authentication required');
+    }
+
+    const scoreUpdates = args.scoreUpdates.map(
+      (scoreUpdate: {
+        matchId: string;
+        score?: 'away' | 'draw' | 'home' | null | undefined;
+      }) => ({
+        ...scoreUpdate,
+        score: scoreUpdate.score as Score | null | undefined,
+      }),
+    );
+
+    const updatedMatches = await services.updateManyMatchScores(scoreUpdates);
+
+    return updatedMatches.map((match) => ({
+      ...match,
+      startDate: formatISO(match.startDate),
     }));
   },
 });

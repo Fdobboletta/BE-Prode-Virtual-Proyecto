@@ -1,4 +1,4 @@
-import { MatchType } from '../../database/models/match';
+import { MatchType, Score } from '../../database/models/match';
 import {
   BadRequestError,
   CustomError,
@@ -64,6 +64,41 @@ export const updateMatch = async (
     }
     throw new UnknownError(
       `No fue posible actualizar el spartido: ${error.message}`,
+    );
+  }
+};
+
+export const updateManyMatchScores = async (
+  scoreUpdates: {
+    matchId: string;
+    score?: Score | null | undefined;
+  }[],
+): Promise<MatchType[]> => {
+  try {
+    const updatedMatches: MatchType[] = [];
+
+    for (const { matchId, score } of scoreUpdates) {
+      const match = await dbModels.MatchModel.findByPk(matchId);
+      if (!match) {
+        throw new NotFoundError(`Partido con ID ${matchId} no encontrado.`);
+      }
+
+      if (score !== undefined) {
+        await match.update({
+          officialScore: score,
+        });
+        updatedMatches.push(match.dataValues);
+      }
+    }
+
+    return updatedMatches;
+  } catch (error: any) {
+    console.error(error);
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new UnknownError(
+      `No fue posible actualizar los partidos: ${error.message}`,
     );
   }
 };

@@ -14,6 +14,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  ScoreUpdateInput: { // input type
+    matchId: string; // ID!
+    score?: NexusGenEnums['Score'] | null; // Score
+  }
 }
 
 export interface NexusGenEnums {
@@ -104,6 +108,7 @@ export interface NexusGenFieldTypes {
     disconnectMercadoPagoIntegration: string | null; // String
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
+    updateManyMatchScores: NexusGenRootTypes['Match'][]; // [Match!]!
     updateMatch: NexusGenRootTypes['Match']; // Match!
     updateRoom: NexusGenRootTypes['Room'] | null; // Room
   }
@@ -162,6 +167,7 @@ export interface NexusGenFieldTypeNames {
     disconnectMercadoPagoIntegration: 'String'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
+    updateManyMatchScores: 'Match'
     updateMatch: 'Match'
     updateRoom: 'Room'
   }
@@ -241,6 +247,9 @@ export interface NexusGenArgTypes {
     sendResetPasswordEmail: { // args
       email: string; // String!
     }
+    updateManyMatchScores: { // args
+      scoreUpdates: NexusGenInputs['ScoreUpdateInput'][]; // [ScoreUpdateInput!]!
+    }
     updateMatch: { // args
       awayTeam: string; // String!
       date: string; // String!
@@ -278,7 +287,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 

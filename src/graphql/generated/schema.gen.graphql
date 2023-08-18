@@ -34,6 +34,7 @@ type Mutation {
   disconnectMercadoPagoIntegration: String
   registerNewUser(address: String!, cellphone: String!, email: String!, firstName: String!, lastName: String!, password: String!, role: UserRole!, termsAccepted: Boolean!): User!
   sendResetPasswordEmail(email: String!): String
+  updateManyMatchScores(scoreUpdates: [ScoreUpdateInput!]!): [Match!]!
   updateMatch(awayTeam: String!, date: String!, homeTeam: String!, matchId: String!): Match!
   updateRoom(dueDate: String!, entryPrice: Float!, isActive: Boolean!, name: String!, prizeMoney: Float!, roomId: String!): Room
 }
@@ -61,6 +62,11 @@ enum Score {
   AWAY
   DRAW
   HOME
+}
+
+input ScoreUpdateInput {
+  matchId: ID!
+  score: Score
 }
 
 """App user"""
