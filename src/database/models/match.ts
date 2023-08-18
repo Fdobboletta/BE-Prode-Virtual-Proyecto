@@ -12,7 +12,7 @@ export interface MatchType {
   id: string;
   homeTeam: string;
   awayTeam: string;
-  officialScore: Score;
+  officialScore: Score | null | undefined;
   startDate: Date;
   roomId: string;
 }

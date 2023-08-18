@@ -7,7 +7,7 @@ type Match {
   awayTeam: String!
   homeTeam: String!
   id: ID!
-  officialScore: Score!
+  officialScore: Score
   roomId: ID!
   startDate: String!
 }

@@ -25,7 +25,7 @@ export const MatchObject = objectType({
     t.nonNull.id('id'),
       t.nonNull.string('homeTeam'),
       t.nonNull.string('awayTeam'),
-      t.nonNull.field('officialScore', { type: ScoreEnum }),
+      t.nullable.field('officialScore', { type: ScoreEnum }),
       t.nonNull.string('startDate'),
       t.nonNull.id('roomId');
   },

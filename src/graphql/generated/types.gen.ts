@@ -34,7 +34,7 @@ export interface NexusGenObjects {
     awayTeam: string; // String!
     homeTeam: string; // String!
     id: string; // ID!
-    officialScore: NexusGenEnums['Score']; // Score!
+    officialScore?: NexusGenEnums['Score'] | null; // Score
     roomId: string; // ID!
     startDate: string; // String!
   }
@@ -82,7 +82,7 @@ export interface NexusGenFieldTypes {
     awayTeam: string; // String!
     homeTeam: string; // String!
     id: string; // ID!
-    officialScore: NexusGenEnums['Score']; // Score!
+    officialScore: NexusGenEnums['Score'] | null; // Score
     roomId: string; // ID!
     startDate: string; // String!
   }
