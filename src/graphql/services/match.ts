@@ -29,12 +29,12 @@ export const createMatch = async (
       roomId: args.roomId,
     });
     return match.dataValues;
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     if (error instanceof CustomError) {
       throw error;
     }
-    throw new UnknownError();
+    throw new UnknownError(`No se pudo crear su partido: ${error.message}`);
   }
 };
 
