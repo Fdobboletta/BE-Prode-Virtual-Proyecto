@@ -13,6 +13,8 @@ import { Score } from '../../database/models/match';
 import { UserInputError } from 'apollo-server-express';
 import * as services from '../services/match';
 import { formatISO } from 'date-fns';
+import { UserRole } from '../../database/models/user';
+import { checkAuthAndRole } from './utils';
 
 export const ScoreEnum = enumType({
   name: 'Score',
@@ -48,10 +50,7 @@ export const createMatch = mutationField('createMatch', {
     roomId: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
-
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const newMatch = await services.createMatch({
       homeTeam: args.homeTeam,
       awayTeam: args.awayTeam,
@@ -72,10 +71,7 @@ export const updateMatch = mutationField('updateMatch', {
     date: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
-
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const updatedMatch = await services.updateMatch(args.matchId, {
       homeTeam: args.homeTeam,
       startDate: args.date,
@@ -92,9 +88,7 @@ export const deleteMatch = mutationField('deleteMatch', {
     matchId: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     await services.deleteMatch(args.matchId);
     return null;
   },
@@ -124,10 +118,7 @@ export const updateManyMatchScores = mutationField('updateManyMatchScores', {
     scoreUpdates: nonNull(list(nonNull(ScoreUpdateInput))),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
-
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const scoreUpdates = args.scoreUpdates.map(
       (scoreUpdate: {
         matchId: string;

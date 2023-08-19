@@ -113,6 +113,7 @@ export interface NexusGenFieldTypes {
     updateRoom: NexusGenRootTypes['Room'] | null; // Room
   }
   Query: { // field return type
+    getActiveRooms: NexusGenRootTypes['Room'][]; // [Room!]!
     getMatchesByRoomId: NexusGenRootTypes['Match'][]; // [Match!]!
     getRoomById: NexusGenRootTypes['Room']; // Room!
     getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
@@ -172,6 +173,7 @@ export interface NexusGenFieldTypeNames {
     updateRoom: 'Room'
   }
   Query: { // field return type name
+    getActiveRooms: 'Room'
     getMatchesByRoomId: 'Match'
     getRoomById: 'Room'
     getRoomsByUserId: 'Room'

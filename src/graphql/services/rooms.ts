@@ -108,6 +108,23 @@ export const getRoomsByCreatorId = async (
   }
 };
 
+export const getActiveRooms = async (): Promise<RoomType[]> => {
+  try {
+    const rooms = await dbModels.RoomModel.findAll({
+      where: {
+        isActive: true,
+      },
+    });
+
+    return rooms.map((room) => room.dataValues);
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(
+      `No se pudieron obtener las salas: ${error.message}`,
+    );
+  }
+};
+
 export const getRoomById = async (roomId: string): Promise<RoomType> => {
   try {
     const room = await dbModels.RoomModel.findByPk(roomId);

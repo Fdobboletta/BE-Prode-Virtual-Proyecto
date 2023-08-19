@@ -12,6 +12,8 @@ import {
   stringArg,
 } from 'nexus';
 import { UserInputError } from 'apollo-server-express';
+import { UserRole } from '../../database/models/user';
+import { checkAuthAndRole } from './utils';
 
 export const RoomObject = objectType({
   name: 'Room',
@@ -37,9 +39,7 @@ export const createRoom = mutationField('createRoom', {
     isActive: nonNull(booleanArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const newRoom = await services.createNewRoom(
       {
         isActive: args.isActive,
@@ -57,10 +57,21 @@ export const createRoom = mutationField('createRoom', {
 export const getRoomsByUserId = queryField('getRoomsByUserId', {
   type: nonNull(list(nonNull(RoomObject))),
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const roomsList = await services.getRoomsByCreatorId(ctx.userId || '');
+
+    return roomsList.map((room) => ({
+      ...room,
+      dueDate: formatISO(room.dueDate),
+    }));
+  },
+});
+
+export const getActiveRooms = queryField('getActiveRooms', {
+  type: nonNull(list(nonNull(RoomObject))),
+  resolve: async (_, args, ctx) => {
+    checkAuthAndRole(ctx, UserRole.PLAYER);
+    const roomsList = await services.getActiveRooms();
 
     return roomsList.map((room) => ({
       ...room,
@@ -90,9 +101,7 @@ export const activateRoom = mutationField('activateRoom', {
     roomId: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const updatedRoom = await services.activateRoom(args.roomId);
     return { ...updatedRoom, dueDate: formatISO(updatedRoom.dueDate) };
   },
@@ -104,9 +113,7 @@ export const deleteRoom = mutationField('deleteRoom', {
     roomId: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     await services.deleteRoom(args.roomId);
     return null;
   },
@@ -123,9 +130,7 @@ export const updateRoom = mutationField('updateRoom', {
     isActive: nonNull(booleanArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const updatedRoom = await services.updateRoom(
       args.roomId,
       {
