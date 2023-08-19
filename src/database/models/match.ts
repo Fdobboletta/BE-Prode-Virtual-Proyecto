@@ -37,7 +37,6 @@ export const defineMatchModel = (
     homeTeam: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
     awayTeam: {
       type: DataTypes.STRING,
