@@ -47,3 +47,23 @@ export const disconnectMercadoPagoIntegration = mutationField(
     },
   },
 );
+
+export const generateMercadoPagoPreference = mutationField(
+  'generateMercadoPagoPreferenceId',
+  {
+    type: nonNull(MercadoPagoPreferenceObject),
+    args: {
+      roomId: nonNull(stringArg()),
+    },
+    resolve: async (_, args, ctx) => {
+      if (!ctx.userId) {
+        throw new UserInputError('Authentication required');
+      }
+      const mpPreferenceId = await services.generateMercadoPagoPreferenceId({
+        playerUserId: ctx.userId,
+        roomId: args.roomId,
+      });
+      return { preferenceId: mpPreferenceId };
+    },
+  },
+);

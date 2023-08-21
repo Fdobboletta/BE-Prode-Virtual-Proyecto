@@ -106,6 +106,7 @@ export interface NexusGenFieldTypes {
     deleteMatch: string | null; // String
     deleteRoom: string | null; // String
     disconnectMercadoPagoIntegration: string | null; // String
+    generateMercadoPagoPreferenceId: NexusGenRootTypes['MercadoPagoPreference']; // MercadoPagoPreference!
     registerNewUser: NexusGenRootTypes['User']; // User!
     sendResetPasswordEmail: string | null; // String
     updateManyMatchScores: NexusGenRootTypes['Match'][]; // [Match!]!
@@ -166,6 +167,7 @@ export interface NexusGenFieldTypeNames {
     deleteMatch: 'String'
     deleteRoom: 'String'
     disconnectMercadoPagoIntegration: 'String'
+    generateMercadoPagoPreferenceId: 'MercadoPagoPreference'
     registerNewUser: 'User'
     sendResetPasswordEmail: 'String'
     updateManyMatchScores: 'Match'
@@ -234,6 +236,9 @@ export interface NexusGenArgTypes {
       matchId: string; // String!
     }
     deleteRoom: { // args
+      roomId: string; // String!
+    }
+    generateMercadoPagoPreferenceId: { // args
       roomId: string; // String!
     }
     registerNewUser: { // args

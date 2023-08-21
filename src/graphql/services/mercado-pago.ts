@@ -4,6 +4,7 @@ import { NotFoundError, UnknownError } from '../../custom-errors';
 import { CreatePreferencePayload } from 'mercadopago/models/preferences/create-payload.model';
 import { dbModels } from '../../server';
 
+// DEPRECATED!!!!!
 export const getMercadoPagoPreferenceId = async ({
   user_access_token,
   entry_price,
@@ -41,6 +42,59 @@ export const getMercadoPagoPreferenceId = async ({
     );
 
     return response.data.init_point;
+  } catch (error: any) {
+    throw new Error(
+      `Error al generar la preferencia de MercadoPago: ${error.message}`,
+    );
+  }
+};
+
+export const generateMercadoPagoPreferenceId = async ({
+  playerUserId,
+  roomId,
+}: {
+  playerUserId: string;
+  roomId: string;
+}): Promise<string> => {
+  try {
+    const queriedRoom = await dbModels.RoomModel.findByPk(roomId);
+    if (!queriedRoom) {
+      throw new NotFoundError('Room not found.');
+    }
+    const room = queriedRoom.dataValues;
+
+    const roomCreatorUser = await dbModels.UserModel.findByPk(room.creatorId);
+    if (!roomCreatorUser) {
+      throw new NotFoundError('User not found.');
+    }
+
+    const roomCreatorUserData = roomCreatorUser.dataValues;
+
+    const createPreferencePayload: CreatePreferencePayload = {
+      additional_info: playerUserId,
+      items: [
+        {
+          id: room.id,
+          title: room.name,
+          unit_price: room.entryPrice,
+          currency_id: 'ARS',
+          quantity: 1,
+        },
+      ],
+    };
+
+    const response = await axios.post(
+      'https://api.mercadopago.com/checkout/preferences',
+      createPreferencePayload,
+      {
+        headers: {
+          Authorization: `Bearer ${roomCreatorUserData.mercadoPagoAccessToken}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    return response.data.id;
   } catch (error: any) {
     throw new Error(
       `Error al generar la preferencia de MercadoPago: ${error.message}`,

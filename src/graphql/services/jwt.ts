@@ -8,20 +8,38 @@ type ResetPasswordTokenPayload = {
   exp: number;
 };
 
+type TokenPayload = {
+  userId: string;
+  email: string;
+  role: UserRole;
+  exp: number;
+};
+
+const TOKEN_EXPIRATION_SECONDS = 60 * 15; // 15 minutos
+
 // Generate a JWT token (register)
-export const generateRegisterToken = (user: UserType): string => {
-  const payload = { userId: user.id, email: user.email, role: user.role };
+export const generateRegisterToken = (
+  user: Pick<UserType, 'id' | 'email' | 'role'>,
+): string => {
+  const payload: TokenPayload = {
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+    exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRATION_SECONDS,
+  };
   const options = { expiresIn: '1h' };
   return sign(payload, process.env.JWT_SECRET || '', options);
 };
 
 // Generate a JWT token (resetPassword)
-export const generateResetPasswordToken = (user: UserType): string => {
+export const generateResetPasswordToken = (
+  user: Pick<UserType, 'id' | 'email' | 'role'>,
+): string => {
   const payload: ResetPasswordTokenPayload = {
     userId: user.id,
     email: user.email,
     role: user.role,
-    exp: Math.floor(Date.now() / 1000) + 60 * 60, // Expira en 1 hora
+    exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRATION_SECONDS,
   };
   return sign(payload, process.env.RESET_PASSWORD_SECRET || '');
 };
@@ -74,5 +92,29 @@ export const isJwtValid = (token: string, isResetPassword: boolean) => {
     return true;
   } catch (error) {
     return false;
+  }
+};
+
+export const refreshTokenIfAboutToExpire = (token: string): string => {
+  try {
+    const decoded = verify(token, process.env.JWT_SECRET || '') as TokenPayload;
+
+    const currentTime = Math.floor(Date.now() / 1000);
+    const timeUntilExpiration = decoded.exp - currentTime;
+
+    const REFRESH_THRESHOLD = 300; // 5 minutes
+
+    if (timeUntilExpiration <= REFRESH_THRESHOLD) {
+      const user = {
+        id: decoded.userId,
+        email: decoded.email,
+        role: decoded.role,
+      };
+      return generateRegisterToken(user);
+    }
+
+    return token;
+  } catch (error) {
+    throw new Error('Invalid token');
   }
 };
