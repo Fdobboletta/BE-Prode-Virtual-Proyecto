@@ -73,6 +73,8 @@ export const generateMercadoPagoPreferenceId = async ({
     const createPreferencePayload: CreatePreferencePayload = {
       additional_info: playerUserId,
       external_reference: playerUserId,
+      notification_url:
+        'https://analysis-app-2023.onrender.com/mercado-pago-notification',
       items: [
         {
           id: room.id,
