@@ -72,6 +72,7 @@ export const generateMercadoPagoPreferenceId = async ({
 
     const createPreferencePayload: CreatePreferencePayload = {
       additional_info: playerUserId,
+      external_reference: playerUserId,
       items: [
         {
           id: room.id,
