@@ -18,9 +18,11 @@ const server = new ApolloServer({
   introspection: true,
 });
 
+app.use(express.json());
+
 // New endpoint for Mercado Pago notifications
 app.post('/mercado-pago-notification', (req, res) => {
-  console.log('MERCADO PAGOOO DATA: ', req);
+  console.log('MERCADO PAGOOO DATA: ', req.body);
   res.sendStatus(200);
 });
 
