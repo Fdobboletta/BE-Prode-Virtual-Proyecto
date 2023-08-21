@@ -15,7 +15,7 @@ type TokenPayload = {
   exp: number;
 };
 
-const TOKEN_EXPIRATION_SECONDS = 60 * 15; // 15 minutos
+const TOKEN_EXPIRATION_SECONDS = 60 * 60; // 60 minutos
 
 // Generate a JWT token (register)
 export const generateRegisterToken = (
