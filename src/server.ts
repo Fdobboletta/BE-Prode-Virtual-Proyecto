@@ -18,10 +18,17 @@ const server = new ApolloServer({
   introspection: true,
 });
 
+// New endpoint for Mercado Pago notifications
+app.post('/mercado-pago-notification', (req, res) => {
+  console.log('MERCADO PAGOOO DATA: ', req.body);
+  res.sendStatus(200);
+});
+
 // Apply middleware to the server and start listening for incoming requests
 const startServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
+
   if (process.env.NODE_ENV === 'local') {
     const options = {
       key: fs.readFileSync('localhost.key'),
