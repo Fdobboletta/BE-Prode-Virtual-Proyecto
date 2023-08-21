@@ -27,8 +27,7 @@ export const generateRegisterToken = (
     role: user.role,
     exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRATION_SECONDS,
   };
-  const options = { expiresIn: '1h' };
-  return sign(payload, process.env.JWT_SECRET || '', options);
+  return sign(payload, process.env.JWT_SECRET || '');
 };
 
 // Generate a JWT token (resetPassword)
