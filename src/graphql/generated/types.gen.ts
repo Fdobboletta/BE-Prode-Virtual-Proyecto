@@ -47,6 +47,7 @@ export interface NexusGenObjects {
   }
   MercadoPagoPreference: { // root type
     preferenceId: string; // ID!
+    redirectLink: string; // String!
   }
   Mutation: {};
   Query: {};
@@ -95,6 +96,7 @@ export interface NexusGenFieldTypes {
   }
   MercadoPagoPreference: { // field return type
     preferenceId: string; // ID!
+    redirectLink: string; // String!
   }
   Mutation: { // field return type
     activateRoom: NexusGenRootTypes['Room']; // Room!
@@ -156,6 +158,7 @@ export interface NexusGenFieldTypeNames {
   }
   MercadoPagoPreference: { // field return type name
     preferenceId: 'ID'
+    redirectLink: 'String'
   }
   Mutation: { // field return type name
     activateRoom: 'Room'

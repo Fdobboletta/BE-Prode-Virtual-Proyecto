@@ -20,6 +20,7 @@ type MercadoPagoAccessToken {
 """Informacion de link de pago de MercadoPago"""
 type MercadoPagoPreference {
   preferenceId: ID!
+  redirectLink: String!
 }
 
 type Mutation {

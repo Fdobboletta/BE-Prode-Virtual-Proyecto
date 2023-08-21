@@ -55,7 +55,7 @@ export const generateMercadoPagoPreferenceId = async ({
 }: {
   playerUserId: string;
   roomId: string;
-}): Promise<string> => {
+}): Promise<{ preferenceId: string; paymentLink: string }> => {
   try {
     const queriedRoom = await dbModels.RoomModel.findByPk(roomId);
     if (!queriedRoom) {
@@ -94,7 +94,10 @@ export const generateMercadoPagoPreferenceId = async ({
       },
     );
 
-    return response.data.id;
+    return {
+      preferenceId: response.data.id,
+      paymentLink: response.data.init_point,
+    };
   } catch (error: any) {
     throw new Error(
       `Error al generar la preferencia de MercadoPago: ${error.message}`,

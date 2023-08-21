@@ -7,6 +7,7 @@ export const MercadoPagoPreferenceObject = objectType({
   description: 'Informacion de link de pago de MercadoPago',
   definition: (t) => {
     t.nonNull.id('preferenceId');
+    t.nonNull.string('redirectLink');
   },
 });
 
@@ -59,11 +60,14 @@ export const generateMercadoPagoPreference = mutationField(
       if (!ctx.userId) {
         throw new UserInputError('Authentication required');
       }
-      const mpPreferenceId = await services.generateMercadoPagoPreferenceId({
+      const mpPreference = await services.generateMercadoPagoPreferenceId({
         playerUserId: ctx.userId,
         roomId: args.roomId,
       });
-      return { preferenceId: mpPreferenceId };
+      return {
+        preferenceId: mpPreference.preferenceId,
+        redirectLink: mpPreference.paymentLink,
+      };
     },
   },
 );
