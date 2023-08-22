@@ -34,7 +34,7 @@ app.post('/mercado-pago-notification', async (req, res) => {
       },
     );
     const merchantOrdersResponse = await axios.get(
-      `https://api.mercadopago.com/merchant_orders/[${req.body.data.id}`,
+      `https://api.mercadopago.com/merchant_orders/${req.body.data.id}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.APP_MERCADO_PAGO_ACCESS_TOKEN}`,
