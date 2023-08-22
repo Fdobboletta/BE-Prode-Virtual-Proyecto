@@ -37,6 +37,17 @@ app.post('/mercado-pago-notification', async (req, res) => {
     console.log('PAYMENT RESPONSE', paymentsResponse.data);
   }
 
+  if (req.body.topic === 'merchant_order') {
+    const merchantOrdersResponse = await axios.get(req.body.resource, {
+      headers: {
+        Authorization: `Bearer ${process.env.APP_MERCADO_PAGO_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('MERCHANT ORDER RESPONSE:', merchantOrdersResponse.data);
+  }
+
   console.log('MERCADO PAGOOO DATA: ', req.body);
   res.sendStatus(200);
 });
