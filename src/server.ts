@@ -25,7 +25,7 @@ app.use(express.json());
 app.post('/mercado-pago-notification', async (req, res) => {
   if (req.body.action === 'payment.created') {
     const response = await axios.get(
-      `api.mercadolibre.com/merchant_orders/${req.body.data.id}`,
+      `https://api.mercadopago.com/v1/payments/${req.body.data.id}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.APP_MERCADO_PAGO_ACCESS_TOKEN}`,
