@@ -8,6 +8,7 @@ import { createContext } from './graphql/context';
 import { connectDatabase, sequelizeInstance } from './database';
 import { defineModels } from './database/models/utils';
 import axios from 'axios';
+import { buildMercadoPagoHeaders } from './config';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -26,24 +27,17 @@ app.post('/mercado-pago-notification', async (req, res) => {
   if (req.body.action === 'payment.created') {
     const paymentsResponse = await axios.get(
       `https://api.mercadopago.com/v1/payments/${req.body.data.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.APP_MERCADO_PAGO_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-      },
+      buildMercadoPagoHeaders(process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || ''),
     );
 
     console.log('PAYMENT RESPONSE', paymentsResponse.data);
   }
 
   if (req.body.topic === 'merchant_order') {
-    const merchantOrdersResponse = await axios.get(req.body.resource, {
-      headers: {
-        Authorization: `Bearer ${process.env.APP_MERCADO_PAGO_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const merchantOrdersResponse = await axios.get(
+      req.body.resource,
+      buildMercadoPagoHeaders(process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || ''),
+    );
 
     console.log('MERCHANT ORDER RESPONSE:', merchantOrdersResponse.data);
   }

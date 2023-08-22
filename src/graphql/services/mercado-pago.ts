@@ -3,6 +3,7 @@ import { NotFoundError, UnknownError } from '../../custom-errors';
 
 import { CreatePreferencePayload } from 'mercadopago/models/preferences/create-payload.model';
 import { dbModels } from '../../server';
+import { buildMercadoPagoHeaders } from '../../config';
 
 // DEPRECATED!!!!!
 export const getMercadoPagoPreferenceId = async ({
@@ -33,12 +34,7 @@ export const getMercadoPagoPreferenceId = async ({
     const response = await axios.post(
       'https://api.mercadopago.com/checkout/preferences',
       createPreferencePayload,
-      {
-        headers: {
-          Authorization: `Bearer ${user_access_token}`,
-          'Content-Type': 'application/json',
-        },
-      },
+      buildMercadoPagoHeaders(user_access_token),
     );
 
     return response.data.init_point;
@@ -89,12 +85,7 @@ export const generateMercadoPagoPreferenceId = async ({
     const response = await axios.post(
       'https://api.mercadopago.com/checkout/preferences',
       createPreferencePayload,
-      {
-        headers: {
-          Authorization: `Bearer ${roomCreatorUserData.mercadoPagoAccessToken}`,
-          'Content-Type': 'application/json',
-        },
-      },
+      buildMercadoPagoHeaders(roomCreatorUserData.mercadoPagoAccessToken || ''),
     );
 
     return {
