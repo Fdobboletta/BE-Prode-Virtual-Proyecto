@@ -7,6 +7,7 @@ import { schema } from './graphql/schema';
 import { createContext } from './graphql/context';
 import { connectDatabase, sequelizeInstance } from './database';
 import { defineModels } from './database/models/utils';
+import axios from 'axios';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -21,7 +22,20 @@ const server = new ApolloServer({
 app.use(express.json());
 
 // New endpoint for Mercado Pago notifications
-app.post('/mercado-pago-notification', (req, res) => {
+app.post('/mercado-pago-notification', async (req, res) => {
+  if (req.body.action === 'payment.created') {
+    const response = await axios.get(
+      `api.mercadolibre.com/merchant_orders/${req.body.data.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.APP_MERCADO_PAGO_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    console.log('RESPONSE FROM MERCHANT ORDERS', response);
+  }
+
   console.log('MERCADO PAGOOO DATA: ', req.body);
   res.sendStatus(200);
 });
