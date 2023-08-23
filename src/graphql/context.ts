@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 import { decodeUserToken } from './services/jwt';
-import { UserRole } from 'database/models/user';
+import { UserRole } from '../database/models/user';
 
 export interface Context {
   req: {

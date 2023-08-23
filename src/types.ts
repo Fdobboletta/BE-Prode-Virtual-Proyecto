@@ -29,8 +29,8 @@ export type MercadoPagoPayment = {
     merchant_order_id: string;
     total_paid_amount: number;
     net_received_amount: number;
-    paymentStatus: string;
-    paymentStatusDetail: string;
+    status: string;
+    status_detail: string;
     payment_type: string;
     payment_method_id: string;
     operation_type: string;
