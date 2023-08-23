@@ -51,7 +51,7 @@ app.post('/mercado-pago-notification', async (req, res) => {
         payment_type_id,
         payment_method_id,
         operation_type,
-        metadata: { playerId, roomId },
+        metadata: { player_id, room_id },
       } = paymentsResponse.data;
 
       const filteredPayment: MercadoPagoPayment = {
@@ -66,8 +66,8 @@ app.post('/mercado-pago-notification', async (req, res) => {
         payment_method_id,
         operation_type,
         metadata: {
-          playerId,
-          roomId,
+          player_id,
+          room_id,
         },
       };
 

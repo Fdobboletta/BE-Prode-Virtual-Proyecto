@@ -19,8 +19,8 @@ export const createPayment = async (
       netReceived: payment.net_received_amount,
       dateApproved: new Date(payment.date_approved),
       moneyReleaseDate: new Date(payment.money_release_date),
-      roomId: payment.metadata.roomId,
-      playerId: payment.metadata.playerId,
+      roomId: payment.metadata.room_id,
+      playerId: payment.metadata.player_id,
     });
 
     return newPayment.dataValues;

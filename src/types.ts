@@ -20,7 +20,7 @@ export type MercadoPagoPayment = {
   payment_type_id: string;
   payment_method_id: string;
   operation_type: string;
-  metadata: { playerId: string; roomId: string };
+  metadata: { player_id: string; room_id: string };
   // Safety check in case Mp adds new fields
   [key: string]: any;
 };

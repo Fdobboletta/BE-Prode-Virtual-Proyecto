@@ -67,7 +67,7 @@ export const generateMercadoPagoPreferenceId = async ({
     const roomCreatorUserData = roomCreatorUser.dataValues;
 
     const createPreferencePayload: CreatePreferencePayload & {
-      metadata: { playerId: string; roomId: string };
+      metadata: { player_id: string; room_id: string };
     } = {
       additional_info: playerUserId,
       external_reference: playerUserId,
@@ -82,7 +82,7 @@ export const generateMercadoPagoPreferenceId = async ({
           quantity: 1,
         },
       ],
-      metadata: { playerId: playerUserId, roomId: room.id },
+      metadata: { player_id: playerUserId, room_id: room.id },
     };
 
     const response = await axios.post(
