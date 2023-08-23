@@ -25,8 +25,6 @@ app.use(express.json());
 
 // New endpoint for Mercado Pago notifications
 app.post('/mercado-pago-notification', async (req, res) => {
-  console.log('MERCADO PAGOOO DATA: ', req.body);
-
   if (req.body.topic === 'merchant_order') {
     const merchantOrdersResponse = await axios.get<MercadoPagoMerchantOrder>(
       req.body.resource,
@@ -70,8 +68,8 @@ app.post('/mercado-pago-notification', async (req, res) => {
         merchant_order_id,
         total_paid_amount,
         net_received_amount,
-        paymentStatus,
-        paymentStatusDetail,
+        status,
+        status_detail,
         payment_type,
         payment_method_id,
         operation_type,
@@ -87,8 +85,8 @@ app.post('/mercado-pago-notification', async (req, res) => {
         merchant_order_id,
         total_paid_amount,
         net_received_amount,
-        paymentStatus,
-        paymentStatusDetail,
+        status,
+        status_detail,
         payment_type,
         payment_method_id,
         operation_type,
