@@ -24,15 +24,14 @@ app.use(express.json());
 
 // New endpoint for Mercado Pago notifications
 app.post('/mercado-pago-notification', async (req, res) => {
-  if (req.body.action === 'payment.created') {
+  console.log('MERCADO PAGOOO DATA: ', req.body);
+  if (req.body.topic === 'payment') {
     const paymentsResponse = await axios.get(
-      `https://api.mercadopago.com/v1/payments/${req.body.data.id}`,
+      req.body.resource,
       buildMercadoPagoHeaders(process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || ''),
     );
-
     console.log('PAYMENT RESPONSE', paymentsResponse.data);
   }
-
   if (req.body.topic === 'merchant_order') {
     const merchantOrdersResponse = await axios.get(
       req.body.resource,
@@ -42,7 +41,6 @@ app.post('/mercado-pago-notification', async (req, res) => {
     console.log('MERCHANT ORDER RESPONSE:', merchantOrdersResponse.data);
   }
 
-  console.log('MERCADO PAGOOO DATA: ', req.body);
   res.sendStatus(200);
 });
 
