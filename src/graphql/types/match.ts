@@ -100,9 +100,7 @@ export const getMatchesByRoomId = queryField('getMatchesByRoomId', {
     roomId: nonNull(stringArg()),
   },
   resolve: async (_, args, ctx) => {
-    if (!ctx.userId) {
-      throw new UserInputError('Authentication required');
-    }
+    checkAuthAndRole(ctx, UserRole.ADMIN);
     const roomsList = await services.getMatchesByRoomId(args.roomId);
 
     return roomsList.map((room) => ({
@@ -111,6 +109,28 @@ export const getMatchesByRoomId = queryField('getMatchesByRoomId', {
     }));
   },
 });
+
+export const getMatchesByRoomIdForPlayers = queryField(
+  'getMatchesByRoomIdForPlayers',
+  {
+    type: nonNull(list(nonNull(MatchObject))),
+    args: {
+      roomId: nonNull(stringArg()),
+    },
+    resolve: async (_, args, ctx) => {
+      checkAuthAndRole(ctx, UserRole.PLAYER);
+      const roomsList = await services.getMatchesByRoomIdPlayer(
+        args.roomId,
+        ctx.userId || '',
+      );
+
+      return roomsList.map((room) => ({
+        ...room,
+        startDate: formatISO(room.startDate),
+      }));
+    },
+  },
+);
 
 export const updateManyMatchScores = mutationField('updateManyMatchScores', {
   type: nonNull(list(nonNull(MatchObject))),

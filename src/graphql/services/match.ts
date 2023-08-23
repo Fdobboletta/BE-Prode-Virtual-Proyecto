@@ -136,3 +136,32 @@ export const getMatchesByRoomId = async (
     );
   }
 };
+
+export const getMatchesByRoomIdPlayer = async (
+  roomId: string,
+  userId: string,
+): Promise<MatchType[]> => {
+  try {
+    const payment = await dbModels.PaymentModel.findOne({
+      where: { roomId: roomId, playerId: userId },
+    });
+
+    if (!payment) {
+      throw new UnknownError(
+        `El usuario no ha realizado el pago correspondiente para acceder a esta Sala`,
+      );
+    }
+    const matches = await dbModels.MatchModel.findAll({
+      where: {
+        roomId,
+      },
+    });
+
+    return matches.map((match) => match.dataValues);
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(
+      `No se pudieron obtener los Partidos  de la Sala: ${error.message}`,
+    );
+  }
+};
