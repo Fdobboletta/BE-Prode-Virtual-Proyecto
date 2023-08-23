@@ -1,20 +1,12 @@
-type MercadoPagoItem = {
-  id: string;
-  category_id: string;
-  currency_id: string;
-  description: string;
-  picture_url: string | null;
-  title: string;
-  quantity: number;
-  unit_price: number;
-};
-
 export type MercadoPagoPayment = {
   id: string;
   date_approved: string;
   money_release_date: string;
-  total_paid_amount: number;
-  net_received_amount: number;
+  transaction_details: {
+    total_paid_amount: number;
+    net_received_amount: number;
+    [key: string]: any;
+  };
   status: string;
   status_detail: string;
   payment_type_id: string;
