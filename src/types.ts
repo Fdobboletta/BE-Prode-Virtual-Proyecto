@@ -9,34 +9,18 @@ type MercadoPagoItem = {
   unit_price: number;
 };
 
-export type MercadoPagoMerchantOrder = {
-  id: number;
-  status: string;
-  order_status: string;
-  external_reference: string;
-  total_amount: number;
-  paid_amount: number;
-  items: MercadoPagoItem[];
-  // Safety check in case Mp adds new fields
-  [key: string]: any;
-};
-
 export type MercadoPagoPayment = {
-  collection: {
-    id: string;
-    date_approved: string;
-    money_release_date: string;
-    merchant_order_id: number;
-    total_paid_amount: number;
-    net_received_amount: number;
-    status: string;
-    status_detail: string;
-    payment_type: string;
-    payment_method_id: string;
-    operation_type: string;
-    // Safety check in case Mp adds new fields
-    [key: string]: any;
-  };
+  id: string;
+  date_approved: string;
+  money_release_date: string;
+  total_paid_amount: number;
+  net_received_amount: number;
+  status: string;
+  status_detail: string;
+  payment_type_id: string;
+  payment_method_id: string;
+  operation_type: string;
+  metadata: { playerId: string; roomId: string };
   // Safety check in case Mp adds new fields
   [key: string]: any;
 };

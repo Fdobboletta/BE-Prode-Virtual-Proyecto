@@ -4,7 +4,6 @@ import { defineMatchModel } from './match';
 import { defineRoomModel } from './room';
 import { defineUserModel } from './user';
 import { defineUserRoomModel } from './user-room';
-import { defineMerchantOrderModel } from './merchant-order';
 import { definePaymentModel } from './payment';
 
 export type DbModels = {
@@ -13,7 +12,6 @@ export type DbModels = {
   MatchModel: ReturnType<typeof defineMatchModel>;
   UserRoomModel: ReturnType<typeof defineUserRoomModel>;
   ForecastModel: ReturnType<typeof defineForecastModel>;
-  MerchantOrderModel: ReturnType<typeof defineMerchantOrderModel>;
   PaymentModel: ReturnType<typeof definePaymentModel>;
 };
 
@@ -35,9 +33,6 @@ export const defineModels = (
     MatchModel,
     UserModel,
   );
-
-  const MerchantOrderModel = defineMerchantOrderModel(sequelizeInstance);
-
   const PaymentModel = definePaymentModel(sequelizeInstance);
 
   const allModels = {
@@ -46,7 +41,6 @@ export const defineModels = (
     UserRoomModel,
     MatchModel,
     ForecastModel,
-    MerchantOrderModel,
     PaymentModel,
   };
 

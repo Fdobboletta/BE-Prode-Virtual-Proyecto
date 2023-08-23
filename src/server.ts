@@ -9,10 +9,9 @@ import { connectDatabase, sequelizeInstance } from './database';
 import { defineModels } from './database/models/utils';
 import axios from 'axios';
 import { buildMercadoPagoHeaders } from './config';
-import { MercadoPagoMerchantOrder, MercadoPagoPayment } from './types';
-import { createOrUpdateMerchantOrder } from './graphql/services/merchant-order';
+import { MercadoPagoPayment } from './types';
 
-import { createPayment } from './graphql/services/payment';
+import { createPayment, updatePayment } from './graphql/services/payment';
 import { UnknownError } from './custom-errors';
 
 const app = express();
@@ -30,78 +29,52 @@ app.use(express.json());
 // New endpoint for Mercado Pago notifications
 app.post('/mercado-pago-notification', async (req, res) => {
   try {
-    if (req.body.topic === 'merchant_order') {
-      const merchantOrdersResponse = await axios.get<MercadoPagoMerchantOrder>(
-        req.body.resource,
-        buildMercadoPagoHeaders(
-          process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || '',
-        ),
-      );
-
-      const {
-        id,
-        status,
-        order_status,
-        external_reference,
-        total_amount,
-        paid_amount,
-        items,
-      } = merchantOrdersResponse.data;
-
-      const filteredMerchantOrder: MercadoPagoMerchantOrder = {
-        id,
-        status,
-        order_status,
-        external_reference,
-        total_amount,
-        paid_amount,
-        items,
-      };
-
-      await createOrUpdateMerchantOrder(filteredMerchantOrder);
-    }
-
-    if (req.body.topic === 'payment') {
+    if (req.body.type === 'payment') {
+      const paymentId = req.body.data.id as string;
       const paymentsResponse = await axios.get<MercadoPagoPayment>(
-        req.body.resource,
+        `https://api.mercadopago.com/v1/payments/${paymentId}`,
         buildMercadoPagoHeaders(
           process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || '',
         ),
       );
 
       const {
-        collection: {
-          id,
-          date_approved,
-          money_release_date,
-          merchant_order_id,
-          total_paid_amount,
-          net_received_amount,
-          status,
-          status_detail,
-          payment_type,
-          payment_method_id,
-          operation_type,
-        },
+        id,
+        date_approved,
+        money_release_date,
+        total_paid_amount,
+        net_received_amount,
+        status,
+        status_detail,
+        payment_type_id,
+        payment_method_id,
+        operation_type,
+        metadata: { playerId, roomId },
       } = paymentsResponse.data;
 
       const filteredPayment: MercadoPagoPayment = {
-        collection: {
-          id,
-          date_approved,
-          money_release_date,
-          merchant_order_id,
-          total_paid_amount,
-          net_received_amount,
-          status,
-          status_detail,
-          payment_type,
-          payment_method_id,
-          operation_type,
+        id,
+        date_approved,
+        money_release_date,
+        total_paid_amount,
+        net_received_amount,
+        status,
+        status_detail,
+        payment_type_id,
+        payment_method_id,
+        operation_type,
+        metadata: {
+          playerId,
+          roomId,
         },
       };
 
-      await createPayment(filteredPayment);
+      if (req.body.action === 'payment.created') {
+        await createPayment(filteredPayment);
+      }
+      if (req.body.action === 'payment.updated') {
+        await updatePayment(filteredPayment.id, filteredPayment);
+      }
     }
 
     res.sendStatus(200);

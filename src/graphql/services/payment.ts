@@ -8,30 +8,58 @@ export const createPayment = async (
   payment: MercadoPagoPayment,
 ): Promise<PaymentType> => {
   try {
-    const existingMerchantOrder = await dbModels.MerchantOrderModel.findOne({
-      where: { merchantOrderMpId: payment.collection.merchant_order_id },
-    });
-
-    if (!existingMerchantOrder) {
-      throw new NotFoundError(
-        'There is no existing merchant order associated with this payment',
-      );
-    }
     const newPayment = await dbModels.PaymentModel.create({
-      merchantOrderId: existingMerchantOrder.dataValues.id,
-      paymentType: payment.collection.payment_type,
-      paymentMethod: payment.collection.payment_method_id,
-      paymentStatus: payment.collection.status,
-      paymentStatusDetail: payment.collection.status_detail,
-      operationType: payment.collection.operation_type,
-      totalPaid: payment.collection.total_paid_amount,
-      netReceived: payment.collection.net_received_amount,
-      dateApproved: new Date(payment.collection.date_approved),
-      moneyReleaseDate: new Date(payment.collection.money_release_date),
+      mercadoPagoPaymentId: payment.id,
+      paymentType: payment.payment_type,
+      paymentMethod: payment.payment_method_id,
+      paymentStatus: payment.status,
+      paymentStatusDetail: payment.status_detail,
+      operationType: payment.operation_type,
+      totalPaid: payment.total_paid_amount,
+      netReceived: payment.net_received_amount,
+      dateApproved: new Date(payment.date_approved),
+      moneyReleaseDate: new Date(payment.money_release_date),
+      roomId: payment.metadata.roomId,
+      playerId: payment.metadata.playerId,
     });
 
     return newPayment.dataValues;
   } catch (error: any) {
     throw new Error(`Error saving payment : ${error.message}`);
+  }
+};
+
+export const updatePayment = async (
+  paymentId: string,
+  updatedPaymentData: Partial<MercadoPagoPayment>,
+): Promise<PaymentType | null> => {
+  try {
+    const existingPayment = await dbModels.PaymentModel.findOne({
+      where: { mercadoPagoPaymentId: paymentId },
+    });
+
+    if (!existingPayment) {
+      throw new NotFoundError(`Payment with ID ${paymentId} not found`);
+    }
+
+    await existingPayment.update({
+      paymentType: updatedPaymentData.payment_type,
+      paymentMethod: updatedPaymentData.payment_method_id,
+      paymentStatus: updatedPaymentData.status,
+      paymentStatusDetail: updatedPaymentData.status_detail,
+      operationType: updatedPaymentData.operation_type,
+      totalPaid: updatedPaymentData.total_paid_amount,
+      netReceived: updatedPaymentData.net_received_amount,
+      dateApproved: updatedPaymentData.date_approved
+        ? new Date(updatedPaymentData.date_approved)
+        : existingPayment.dataValues.dateApproved,
+      moneyReleaseDate: updatedPaymentData.money_release_date
+        ? new Date(updatedPaymentData.money_release_date)
+        : existingPayment.dataValues.moneyReleaseDate,
+    });
+
+    return existingPayment.dataValues;
+  } catch (error: any) {
+    throw new Error(`Error updating payment: ${error.message}`);
   }
 };

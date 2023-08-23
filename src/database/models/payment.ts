@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface PaymentType {
   id: string;
-  merchantOrderId: string;
+  mercadoPagoPaymentId: string;
   paymentType: string;
   paymentMethod: string;
   operationType: string;
@@ -13,6 +13,8 @@ export interface PaymentType {
   paymentStatusDetail: string;
   dateApproved: Date;
   moneyReleaseDate: Date;
+  roomId: string;
+  playerId: string;
 }
 
 export interface PaymentCreationType extends Optional<PaymentType, 'id'> {}
@@ -26,11 +28,23 @@ export const definePaymentModel = (sequelizeInstance: SequelizeInstance) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    merchantOrderId: {
+    mercadoPagoPaymentId: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
+    playerId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'MerchantOrders',
+        model: 'Users',
+        key: 'id',
+      },
+    },
+    roomId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Rooms',
         key: 'id',
       },
     },
