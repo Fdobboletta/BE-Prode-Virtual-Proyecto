@@ -3,7 +3,6 @@ import { MercadoPagoMerchantOrder } from '../../types';
 import { MerchantOrderType } from '../../database/models/merchant-order';
 
 import { dbModels } from '../../server';
-import { createNewUserRoom } from './user-rooms';
 
 export const createOrUpdateMerchantOrder = async (
   merchantOrder: MercadoPagoMerchantOrder,
