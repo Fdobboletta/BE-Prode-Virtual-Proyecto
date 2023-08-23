@@ -27,7 +27,7 @@ export const defineMerchantOrderModel = (
       primaryKey: true,
     },
     merchantOrderMpId: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       unique: true,
       allowNull: false,
     },
