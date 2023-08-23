@@ -38,6 +38,8 @@ app.post('/mercado-pago-notification', async (req, res) => {
         ),
       );
 
+      console.log('payment response', paymentsResponse.data);
+
       const {
         id,
         date_approved,
