@@ -5,7 +5,7 @@ export interface MerchantOrderType {
   id: string;
   playerId: string;
   roomId: string;
-  merchantOrderMpId: string;
+  merchantOrderMpId: number;
   orderStatus: string;
   detailedOrderStatus: string;
   totalAmount: number;
@@ -27,7 +27,7 @@ export const defineMerchantOrderModel = (
       primaryKey: true,
     },
     merchantOrderMpId: {
-      type: DataTypes.STRING,
+      type: DataTypes.NUMBER,
       unique: true,
       allowNull: false,
     },

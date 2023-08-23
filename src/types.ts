@@ -10,7 +10,7 @@ type MercadoPagoItem = {
 };
 
 export type MercadoPagoMerchantOrder = {
-  id: string;
+  id: number;
   status: string;
   order_status: string;
   external_reference: string;
@@ -26,7 +26,7 @@ export type MercadoPagoPayment = {
     id: string;
     date_approved: string;
     money_release_date: string;
-    merchant_order_id: string;
+    merchant_order_id: number;
     total_paid_amount: number;
     net_received_amount: number;
     status: string;
