@@ -9,6 +9,7 @@ import { connectDatabase, sequelizeInstance } from './database';
 import { defineModels } from './database/models/utils';
 import axios from 'axios';
 import { buildMercadoPagoHeaders } from './config';
+import { MercadoPagoMerchantOrder, MercadoPagoPayment } from './types';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -25,20 +26,76 @@ app.use(express.json());
 // New endpoint for Mercado Pago notifications
 app.post('/mercado-pago-notification', async (req, res) => {
   console.log('MERCADO PAGOOO DATA: ', req.body);
-  if (req.body.topic === 'payment') {
-    const paymentsResponse = await axios.get(
-      req.body.resource,
-      buildMercadoPagoHeaders(process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || ''),
-    );
-    console.log('PAYMENT RESPONSE', paymentsResponse.data);
-  }
+
   if (req.body.topic === 'merchant_order') {
-    const merchantOrdersResponse = await axios.get(
+    const merchantOrdersResponse = await axios.get<MercadoPagoMerchantOrder>(
       req.body.resource,
       buildMercadoPagoHeaders(process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || ''),
     );
 
-    console.log('MERCHANT ORDER RESPONSE:', merchantOrdersResponse.data);
+    const {
+      id,
+      status,
+      order_status,
+      external_reference,
+      total_amount,
+      paid_amount,
+      items,
+    } = merchantOrdersResponse.data;
+
+    const filteredMerchantOrder: MercadoPagoMerchantOrder = {
+      id,
+      status,
+      order_status,
+      external_reference,
+      total_amount,
+      paid_amount,
+      items,
+    };
+
+    console.log('MERCHANT ORDER RESPONSE:', filteredMerchantOrder);
+  }
+
+  if (req.body.topic === 'payment') {
+    const paymentsResponse = await axios.get<MercadoPagoPayment>(
+      req.body.resource,
+      buildMercadoPagoHeaders(process.env.APP_MERCADO_PAGO_ACCESS_TOKEN || ''),
+    );
+
+    const {
+      collection: {
+        id,
+        date_approved,
+        money_release_date,
+        merchant_order_id,
+        total_paid_amount,
+        net_received_amount,
+        paymentStatus,
+        paymentStatusDetail,
+        payment_type,
+        payment_method_id,
+        operation_type,
+      },
+    } = paymentsResponse.data;
+
+    // Crear un nuevo objeto solo con los campos seguros
+    const filteredPayment: MercadoPagoPayment = {
+      collection: {
+        id,
+        date_approved,
+        money_release_date,
+        merchant_order_id,
+        total_paid_amount,
+        net_received_amount,
+        paymentStatus,
+        paymentStatusDetail,
+        payment_type,
+        payment_method_id,
+        operation_type,
+      },
+    };
+
+    console.log('PAYMENT RESPONSE', filteredPayment.collection);
   }
 
   res.sendStatus(200);
