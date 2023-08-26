@@ -1,4 +1,4 @@
-import { RoomType } from '../../database/models/room';
+import { RoomCreationType, RoomType } from '../../database/models/room';
 import {
   BadRequestError,
   CustomError,
@@ -7,6 +7,9 @@ import {
 } from '../../custom-errors';
 import { dbModels } from '../../server';
 import { getMercadoPagoPreferenceId } from './mercado-pago';
+import { PaymentType } from '../../database/models/payment';
+import { payment } from 'mercadopago';
+import { Model } from 'sequelize';
 
 type CreateRoomType = {
   name: string;
@@ -135,6 +138,38 @@ export const getRoomById = async (roomId: string): Promise<RoomType> => {
     }
 
     return room.dataValues;
+  } catch (error: any) {
+    console.error(error);
+    throw new UnknownError(`Error: ${error.message}`);
+  }
+};
+
+type PaymentWithRoom = PaymentType & {
+  room: Model<RoomType, RoomCreationType>;
+};
+
+export const getUserPayedRooms = async (
+  userId: string,
+): Promise<RoomType[]> => {
+  try {
+    const payments = (
+      await dbModels.PaymentModel.findAll({
+        where: { playerId: userId },
+        include: { model: dbModels.RoomModel, as: 'room' },
+      })
+    ).map((payment) => payment.dataValues);
+
+    if (!payments) {
+      throw new NotFoundError(
+        'No se pudo encontrar el pago con el ID solicitado',
+      );
+    }
+
+    return payments.map((payment) => {
+      const paymentWithRoom = payment as PaymentWithRoom;
+
+      return paymentWithRoom.room.dataValues;
+    });
   } catch (error: any) {
     console.error(error);
     throw new UnknownError(`Error: ${error.message}`);

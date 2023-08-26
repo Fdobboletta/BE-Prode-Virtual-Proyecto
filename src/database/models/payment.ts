@@ -83,5 +83,10 @@ export const definePaymentModel = (sequelizeInstance: SequelizeInstance) => {
     },
   );
 
+  PaymentModel.belongsTo(sequelizeInstance.models.Room, {
+    foreignKey: 'roomId',
+    as: 'room',
+  });
+
   return PaymentModel;
 };

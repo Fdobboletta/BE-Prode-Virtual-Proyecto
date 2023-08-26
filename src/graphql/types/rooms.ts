@@ -29,28 +29,16 @@ export const RoomObject = objectType({
   },
 });
 
-export const createRoom = mutationField('createRoom', {
-  type: nonNull(RoomObject),
-  args: {
-    name: nonNull(stringArg()),
-    dueDate: nonNull(stringArg()),
-    prizeMoney: nonNull(floatArg()),
-    entryPrice: nonNull(floatArg()),
-    isActive: nonNull(booleanArg()),
-  },
+export const getUserPayedRooms = queryField('getUserPayedRooms', {
+  type: nonNull(list(nonNull(RoomObject))),
   resolve: async (_, args, ctx) => {
-    checkAuthAndRole(ctx, UserRole.ADMIN);
-    const newRoom = await services.createNewRoom(
-      {
-        isActive: args.isActive,
-        name: args.name,
-        dueDate: args.dueDate,
-        prizeMoney: args.prizeMoney,
-        entryPrice: args.entryPrice,
-      },
-      ctx.userId || '',
-    );
-    return { ...newRoom, dueDate: formatISO(newRoom.dueDate) };
+    checkAuthAndRole(ctx, UserRole.PLAYER);
+    const roomsList = await services.getUserPayedRooms(ctx.userId || '');
+
+    return roomsList.map((room) => ({
+      ...room,
+      dueDate: formatISO(room.dueDate),
+    }));
   },
 });
 
@@ -95,6 +83,31 @@ export const getRoomById = queryField('getRoomById', {
   },
 });
 
+export const createRoom = mutationField('createRoom', {
+  type: nonNull(RoomObject),
+  args: {
+    name: nonNull(stringArg()),
+    dueDate: nonNull(stringArg()),
+    prizeMoney: nonNull(floatArg()),
+    entryPrice: nonNull(floatArg()),
+    isActive: nonNull(booleanArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    checkAuthAndRole(ctx, UserRole.ADMIN);
+    const newRoom = await services.createNewRoom(
+      {
+        isActive: args.isActive,
+        name: args.name,
+        dueDate: args.dueDate,
+        prizeMoney: args.prizeMoney,
+        entryPrice: args.entryPrice,
+      },
+      ctx.userId || '',
+    );
+    return { ...newRoom, dueDate: formatISO(newRoom.dueDate) };
+  },
+});
+
 export const activateRoom = mutationField('activateRoom', {
   type: nonNull(RoomObject),
   args: {
@@ -104,18 +117,6 @@ export const activateRoom = mutationField('activateRoom', {
     checkAuthAndRole(ctx, UserRole.ADMIN);
     const updatedRoom = await services.activateRoom(args.roomId);
     return { ...updatedRoom, dueDate: formatISO(updatedRoom.dueDate) };
-  },
-});
-
-export const deleteRoom = mutationField('deleteRoom', {
-  type: nullable('String'),
-  args: {
-    roomId: nonNull(stringArg()),
-  },
-  resolve: async (_, args, ctx) => {
-    checkAuthAndRole(ctx, UserRole.ADMIN);
-    await services.deleteRoom(args.roomId);
-    return null;
   },
 });
 
@@ -143,5 +144,17 @@ export const updateRoom = mutationField('updateRoom', {
       ctx.userId || '',
     );
     return { ...updatedRoom, dueDate: formatISO(updatedRoom.dueDate) };
+  },
+});
+
+export const deleteRoom = mutationField('deleteRoom', {
+  type: nullable('String'),
+  args: {
+    roomId: nonNull(stringArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    checkAuthAndRole(ctx, UserRole.ADMIN);
+    await services.deleteRoom(args.roomId);
+    return null;
   },
 });

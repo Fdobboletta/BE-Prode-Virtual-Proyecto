@@ -118,9 +118,11 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     getActiveRooms: NexusGenRootTypes['Room'][]; // [Room!]!
     getMatchesByRoomId: NexusGenRootTypes['Match'][]; // [Match!]!
+    getMatchesByRoomIdForPlayers: NexusGenRootTypes['Match'][]; // [Match!]!
     getRoomById: NexusGenRootTypes['Room']; // Room!
     getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
     getUserMpAccessToken: string | null; // String
+    getUserPayedRooms: NexusGenRootTypes['Room'][]; // [Room!]!
     validateToken: boolean; // Boolean!
   }
   Room: { // field return type
@@ -180,9 +182,11 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     getActiveRooms: 'Room'
     getMatchesByRoomId: 'Match'
+    getMatchesByRoomIdForPlayers: 'Match'
     getRoomById: 'Room'
     getRoomsByUserId: 'Room'
     getUserMpAccessToken: 'String'
+    getUserPayedRooms: 'Room'
     validateToken: 'Boolean'
   }
   Room: { // field return type name
@@ -277,6 +281,9 @@ export interface NexusGenArgTypes {
   }
   Query: {
     getMatchesByRoomId: { // args
+      roomId: string; // String!
+    }
+    getMatchesByRoomIdForPlayers: { // args
       roomId: string; // String!
     }
     getRoomById: { // args
