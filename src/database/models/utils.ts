@@ -26,7 +26,7 @@ export const defineModels = (
     MatchModel,
     UserModel,
   );
-  const PaymentModel = definePaymentModel(sequelizeInstance);
+  const PaymentModel = definePaymentModel(sequelizeInstance, RoomModel);
 
   const allModels = {
     RoomModel,

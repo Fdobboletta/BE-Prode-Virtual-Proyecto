@@ -8,8 +8,9 @@ import {
 import { dbModels } from '../../server';
 import { getMercadoPagoPreferenceId } from './mercado-pago';
 import { PaymentType } from '../../database/models/payment';
-import { payment } from 'mercadopago';
-import { Model } from 'sequelize';
+
+import { Model, Op } from 'sequelize';
+import { sequelizeInstance } from '../../database';
 
 type CreateRoomType = {
   name: string;
@@ -111,15 +112,21 @@ export const getRoomsByCreatorId = async (
   }
 };
 
-export const getActiveRooms = async (): Promise<RoomType[]> => {
+export const getActiveUnpaidRooms = async (): Promise<RoomType[]> => {
   try {
-    const rooms = await dbModels.RoomModel.findAll({
-      where: {
-        isActive: true,
-      },
+    const query = `
+      SELECT *
+      FROM "Rooms"
+      WHERE "isActive" = true
+        AND "id" NOT IN (SELECT "roomId" FROM "Payments")
+    `;
+
+    const activeUnpaidRooms = await sequelizeInstance.query(query, {
+      model: dbModels.RoomModel,
+      mapToModel: true,
     });
 
-    return rooms.map((room) => room.dataValues);
+    return activeUnpaidRooms.map((room) => room.dataValues);
   } catch (error: any) {
     console.error(error);
     throw new UnknownError(

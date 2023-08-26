@@ -1,5 +1,6 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
+import { RoomCreationType, RoomType } from './room';
 
 export interface PaymentType {
   id: string;
@@ -19,7 +20,10 @@ export interface PaymentType {
 
 export interface PaymentCreationType extends Optional<PaymentType, 'id'> {}
 
-export const definePaymentModel = (sequelizeInstance: SequelizeInstance) => {
+export const definePaymentModel = (
+  sequelizeInstance: SequelizeInstance,
+  RoomModel: ModelStatic<Model<RoomType, RoomCreationType>>,
+) => {
   const PaymentModel = sequelizeInstance.define<
     Model<PaymentType, PaymentCreationType>
   >(
@@ -83,7 +87,7 @@ export const definePaymentModel = (sequelizeInstance: SequelizeInstance) => {
     },
   );
 
-  PaymentModel.belongsTo(sequelizeInstance.models.Room, {
+  PaymentModel.belongsTo(RoomModel, {
     foreignKey: 'roomId',
     as: 'room',
   });

@@ -42,7 +42,7 @@ type Mutation {
 }
 
 type Query {
-  getActiveRooms: [Room!]!
+  getActiveUnpaidRooms: [Room!]!
   getMatchesByRoomId(roomId: String!): [Match!]!
   getMatchesByRoomIdForPlayers(roomId: String!): [Match!]!
   getRoomById(roomId: String!): Room!
