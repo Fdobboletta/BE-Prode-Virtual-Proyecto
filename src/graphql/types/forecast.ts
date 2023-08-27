@@ -7,7 +7,7 @@ import * as services from '../services/forecasts';
 import { ScoreEnum } from './match';
 
 export const ForecastInput = inputObjectType({
-  name: 'ScoreUpdateInput',
+  name: 'ForecastInput',
   definition: (t) => {
     t.nonNull.id('matchId');
     t.field('score', { type: ScoreEnum });

@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+input ForecastInput {
+  matchId: ID!
+  score: Score
+}
+
 """Partido"""
 type Match {
   awayTeam: String!
@@ -30,6 +35,7 @@ type Mutation {
   authorizeMercadoPago(mercadoPagoCode: String!): MercadoPagoAccessToken
   changePassword(newPassword: String!, token: String!): String
   createMatch(awayTeam: String!, date: String!, homeTeam: String!, roomId: String!): Match!
+  createOrUpdateMultipleForecasts(forecasts: [ForecastInput!]!): Boolean!
   createRoom(dueDate: String!, entryPrice: Float!, isActive: Boolean!, name: String!, prizeMoney: Float!): Room!
   deleteMatch(matchId: String!): String
   deleteRoom(roomId: String!): String

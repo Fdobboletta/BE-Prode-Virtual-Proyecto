@@ -14,6 +14,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  ForecastInput: { // input type
+    matchId: string; // ID!
+    score?: NexusGenEnums['Score'] | null; // Score
+  }
   ScoreUpdateInput: { // input type
     matchId: string; // ID!
     score?: NexusGenEnums['Score'] | null; // Score
@@ -106,6 +110,7 @@ export interface NexusGenFieldTypes {
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
     changePassword: string | null; // String
     createMatch: NexusGenRootTypes['Match']; // Match!
+    createOrUpdateMultipleForecasts: boolean; // Boolean!
     createRoom: NexusGenRootTypes['Room']; // Room!
     deleteMatch: string | null; // String
     deleteRoom: string | null; // String
@@ -174,6 +179,7 @@ export interface NexusGenFieldTypeNames {
     authorizeMercadoPago: 'MercadoPagoAccessToken'
     changePassword: 'String'
     createMatch: 'Match'
+    createOrUpdateMultipleForecasts: 'Boolean'
     createRoom: 'Room'
     deleteMatch: 'String'
     deleteRoom: 'String'
@@ -240,6 +246,9 @@ export interface NexusGenArgTypes {
       date: string; // String!
       homeTeam: string; // String!
       roomId: string; // String!
+    }
+    createOrUpdateMultipleForecasts: { // args
+      forecasts: NexusGenInputs['ForecastInput'][]; // [ForecastInput!]!
     }
     createRoom: { // args
       dueDate: string; // String!
