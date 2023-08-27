@@ -35,7 +35,7 @@ export const defineForecastModel = (
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Matchs',
+        model: MatchModel,
         key: 'id',
       },
     },
@@ -43,7 +43,7 @@ export const defineForecastModel = (
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'Users',
+        model: UserModel,
         key: 'id',
       },
     },

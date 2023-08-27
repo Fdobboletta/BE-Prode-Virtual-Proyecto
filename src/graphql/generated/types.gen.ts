@@ -52,6 +52,7 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   Room: { // root type
+    creatorId: string; // ID!
     dueDate: string; // String!
     entryPrice: number; // Float!
     id: string; // ID!
@@ -90,6 +91,7 @@ export interface NexusGenFieldTypes {
     officialScore: NexusGenEnums['Score'] | null; // Score
     roomId: string; // ID!
     startDate: string; // String!
+    userForecast: NexusGenEnums['Score'] | null; // Score
   }
   MercadoPagoAccessToken: { // field return type
     accessToken: string; // String!
@@ -126,11 +128,14 @@ export interface NexusGenFieldTypes {
     validateToken: boolean; // Boolean!
   }
   Room: { // field return type
+    creator: NexusGenRootTypes['User']; // User!
+    creatorId: string; // ID!
     dueDate: string; // String!
     entryPrice: number; // Float!
     id: string; // ID!
     isActive: boolean; // Boolean!
     name: string; // String!
+    participantsCount: number; // Int!
     paymentLink: string; // String!
     prizeMoney: number; // Float!
   }
@@ -154,6 +159,7 @@ export interface NexusGenFieldTypeNames {
     officialScore: 'Score'
     roomId: 'ID'
     startDate: 'String'
+    userForecast: 'Score'
   }
   MercadoPagoAccessToken: { // field return type name
     accessToken: 'String'
@@ -190,11 +196,14 @@ export interface NexusGenFieldTypeNames {
     validateToken: 'Boolean'
   }
   Room: { // field return type name
+    creator: 'User'
+    creatorId: 'ID'
     dueDate: 'String'
     entryPrice: 'Float'
     id: 'ID'
     isActive: 'Boolean'
     name: 'String'
+    participantsCount: 'Int'
     paymentLink: 'String'
     prizeMoney: 'Float'
   }

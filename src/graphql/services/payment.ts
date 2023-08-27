@@ -1,7 +1,7 @@
 import { MercadoPagoPayment } from '../../types';
 
 import { dbModels } from '../../server';
-import { NotFoundError } from '../../custom-errors';
+import { NotFoundError, UnknownError } from '../../custom-errors';
 import { PaymentType } from '../../database/models/payment';
 
 export const createPayment = async (
@@ -66,5 +66,16 @@ export const updatePayment = async (
     return existingPayment.dataValues;
   } catch (error: any) {
     throw new Error(`Error updating payment: ${error.message}`);
+  }
+};
+
+export const getPaymentsCount = async (roomId: string): Promise<number> => {
+  try {
+    const paymentsFromRoom = await dbModels.PaymentModel.findAll({
+      where: { roomId: roomId },
+    });
+    return paymentsFromRoom.length;
+  } catch (error: any) {
+    throw new UnknownError(`Error getting payments count: ${error.message}`);
   }
 };

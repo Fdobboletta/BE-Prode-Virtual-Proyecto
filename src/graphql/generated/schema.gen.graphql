@@ -10,6 +10,7 @@ type Match {
   officialScore: Score
   roomId: ID!
   startDate: String!
+  userForecast: Score
 }
 
 """Token de acceso a Mercado Pago"""
@@ -54,11 +55,14 @@ type Query {
 
 """Sala de prode"""
 type Room {
+  creator: User!
+  creatorId: ID!
   dueDate: String!
   entryPrice: Float!
   id: ID!
   isActive: Boolean!
   name: String!
+  participantsCount: Int!
   paymentLink: String!
   prizeMoney: Float!
 }

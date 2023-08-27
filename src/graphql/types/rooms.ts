@@ -1,5 +1,4 @@
 import { formatISO } from 'date-fns';
-import * as services from '../services/rooms';
 import {
   booleanArg,
   floatArg,
@@ -12,7 +11,13 @@ import {
   stringArg,
 } from 'nexus';
 import { UserInputError } from 'apollo-server-express';
+
 import { UserRole } from '../../database/models/user';
+import * as services from '../services/rooms';
+import * as paymentServices from '../services/payment';
+import * as userServices from '../services/user';
+
+import { UserObject } from './user';
 import { checkAuthAndRole } from './utils';
 
 export const RoomObject = objectType({
@@ -20,12 +25,30 @@ export const RoomObject = objectType({
   description: 'Sala de prode',
   definition: (t) => {
     t.nonNull.id('id'),
+      t.nonNull.id('creatorId'),
       t.nonNull.string('name'),
       t.nonNull.string('dueDate'),
       t.nonNull.float('prizeMoney'),
       t.nonNull.float('entryPrice'),
       t.nonNull.string('paymentLink'),
       t.nonNull.boolean('isActive');
+    t.field('creator', {
+      type: nonNull(UserObject),
+      resolve: async (room, _, ctx) => {
+        const creatorUser = await userServices.getUserById(room.creatorId);
+        return { ...creatorUser, token: '' };
+      },
+    });
+    t.field('participantsCount', {
+      type: nonNull('Int'),
+      resolve: async (room, _, ctx) => {
+        // Fetch and return forecasts for this match and the requesting user
+        const participantsCount = await paymentServices.getPaymentsCount(
+          room.id,
+        );
+        return participantsCount;
+      },
+    });
   },
 });
 
