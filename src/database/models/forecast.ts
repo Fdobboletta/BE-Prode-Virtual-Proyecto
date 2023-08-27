@@ -49,7 +49,6 @@ export const defineForecastModel = (
     },
     estimatedScore: {
       type: DataTypes.ENUM(Score.HOME, Score.AWAY, Score.DRAW),
-      allowNull: false,
     },
   });
 
