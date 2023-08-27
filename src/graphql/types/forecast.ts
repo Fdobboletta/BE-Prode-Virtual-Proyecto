@@ -1,8 +1,7 @@
-import { enumType, inputObjectType, list, mutationField, nonNull } from 'nexus';
+import { inputObjectType, list, mutationField, nonNull } from 'nexus';
 
-import { Score } from '../../database/models/forecast';
 import { checkAuthAndRole } from './utils';
-import { UserRole } from 'database/models/user';
+import { UserRole } from '../../database/models/user';
 
 import * as services from '../services/forecasts';
 import { ScoreEnum } from './match';
