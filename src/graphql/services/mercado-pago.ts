@@ -5,46 +5,6 @@ import { CreatePreferencePayload } from 'mercadopago/models/preferences/create-p
 import { dbModels } from '../../server';
 import { buildMercadoPagoHeaders } from '../../config';
 
-// DEPRECATED!!!!!
-export const getMercadoPagoPreferenceId = async ({
-  user_access_token,
-  entry_price,
-  name,
-}: {
-  user_access_token: string | null;
-  entry_price: number;
-  name: string;
-}): Promise<string> => {
-  try {
-    if (!user_access_token) {
-      throw new NotFoundError('El access token no existe o es incorrecto');
-    }
-
-    const createPreferencePayload: CreatePreferencePayload = {
-      items: [
-        {
-          title: `Sala PRODE: ${name}`,
-          unit_price: entry_price,
-          currency_id: 'ARS',
-          quantity: 1,
-        },
-      ],
-    };
-
-    const response = await axios.post(
-      'https://api.mercadopago.com/checkout/preferences',
-      createPreferencePayload,
-      buildMercadoPagoHeaders(user_access_token),
-    );
-
-    return response.data.init_point;
-  } catch (error: any) {
-    throw new Error(
-      `Error al generar la preferencia de MercadoPago: ${error.message}`,
-    );
-  }
-};
-
 export const generateMercadoPagoPreferenceId = async ({
   playerUserId,
   roomId,
@@ -66,6 +26,11 @@ export const generateMercadoPagoPreferenceId = async ({
 
     const roomCreatorUserData = roomCreatorUser.dataValues;
 
+    const urlPrefix =
+      process.env.NODE_ENV === 'local'
+        ? 'http://localhost:5173/'
+        : 'https://comuniprode.netlify.app/';
+
     const createPreferencePayload: CreatePreferencePayload & {
       metadata: { player_id: string; room_id: string };
     } = {
@@ -82,6 +47,9 @@ export const generateMercadoPagoPreferenceId = async ({
           quantity: 1,
         },
       ],
+      back_urls: {
+        success: `${urlPrefix}user/myrooms`,
+      },
       metadata: { player_id: playerUserId, room_id: room.id },
     };
 

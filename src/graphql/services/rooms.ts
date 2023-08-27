@@ -6,7 +6,6 @@ import {
   UnknownError,
 } from '../../custom-errors';
 import { dbModels } from '../../server';
-import { getMercadoPagoPreferenceId } from './mercado-pago';
 import { PaymentType } from '../../database/models/payment';
 
 import { Model, Op } from 'sequelize';
@@ -39,19 +38,13 @@ export const createNewRoom = async (
       throw new NotFoundError('User not found.');
     }
 
-    const mpPreferenceId = await getMercadoPagoPreferenceId({
-      user_access_token: user.dataValues.mercadoPagoAccessToken,
-      name: args.name,
-      entry_price: args.entryPrice,
-    });
-
     // Create new room in the database
     const room = await dbModels.RoomModel.create({
       name: args.name,
       entryPrice: args.entryPrice,
       prizeMoney: args.prizeMoney,
       dueDate: new Date(args.dueDate),
-      paymentLink: mpPreferenceId,
+      paymentLink: '',
       isActive: args.isActive || false,
       creatorId: userId,
     });
@@ -199,12 +192,6 @@ export const updateRoom = async (
       throw new NotFoundError('Usuario no encontrado.');
     }
 
-    const mpPreferenceId = await getMercadoPagoPreferenceId({
-      user_access_token: user.dataValues.mercadoPagoAccessToken,
-      name: updates.name || room.dataValues.name,
-      entry_price: updates.entryPrice || room.dataValues.entryPrice,
-    });
-
     await room.update({
       name: updates.name || room.dataValues.name,
       entryPrice: updates.entryPrice || room.dataValues.entryPrice,
@@ -212,7 +199,7 @@ export const updateRoom = async (
       dueDate: updates.dueDate
         ? new Date(updates.dueDate)
         : room.dataValues.dueDate,
-      paymentLink: mpPreferenceId,
+      paymentLink: room.dataValues.paymentLink,
       isActive: updates.isActive || room.dataValues.isActive,
     });
 
