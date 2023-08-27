@@ -11,6 +11,8 @@ export enum Score {
 
 export interface ForecastType {
   id: string;
+  matchId: string;
+  playerId: string;
   estimatedScore: Score;
 }
 
@@ -29,6 +31,22 @@ export const defineForecastModel = (
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+    matchId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Matchs',
+        key: 'id',
+      },
+    },
+    playerId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id',
+      },
+    },
     estimatedScore: {
       type: DataTypes.ENUM(Score.HOME, Score.AWAY, Score.DRAW),
       allowNull: false,
@@ -36,7 +54,7 @@ export const defineForecastModel = (
   });
 
   ForecastModel.belongsTo(MatchModel, { foreignKey: 'matchId' });
-  ForecastModel.belongsTo(UserModel, { foreignKey: 'userId' });
+  ForecastModel.belongsTo(UserModel, { foreignKey: 'playerId' });
 
   return ForecastModel;
 };
