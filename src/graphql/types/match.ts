@@ -10,7 +10,7 @@ import {
   stringArg,
 } from 'nexus';
 import { Score } from '../../database/models/match';
-import { UserInputError } from 'apollo-server-express';
+import * as forecastServices from '../services/forecasts';
 import * as services from '../services/match';
 import { formatISO } from 'date-fns';
 import { UserRole } from '../../database/models/user';
@@ -31,6 +31,17 @@ export const MatchObject = objectType({
       t.nullable.field('officialScore', { type: ScoreEnum }),
       t.nonNull.string('startDate'),
       t.nonNull.id('roomId');
+    t.field('userForecast', {
+      type: ScoreEnum,
+      resolve: async (parent, _, ctx) => {
+        // Fetch and return forecasts for this match and the requesting user
+        const forecasts = await forecastServices.getForecast({
+          matchId: parent.id,
+          userId: ctx.userId || '',
+        });
+        return forecasts;
+      },
+    });
   },
 });
 

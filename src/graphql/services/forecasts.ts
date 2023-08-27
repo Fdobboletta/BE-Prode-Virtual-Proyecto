@@ -7,6 +7,21 @@ type ForecastInput = {
   matchId: string;
 };
 
+export const getForecast = async ({
+  matchId,
+  userId,
+}: {
+  matchId: string;
+  userId: string;
+}): Promise<Score | null> => {
+  const existingForecast = await dbModels.ForecastModel.findOne({
+    where: { playerId: userId, matchId: matchId },
+  });
+
+  if (!existingForecast) return null;
+  else return existingForecast.dataValues.estimatedScore;
+};
+
 export const createOrUpdateMultipleForecasts = async ({
   forecasts,
   userId,
