@@ -26,6 +26,7 @@ export const createPayment = async (
     return newPayment.dataValues;
   } catch (error: any) {
     throw new Error(`Error saving payment : ${error.message}`);
+    console.log('ERROR!!! ', error.message);
   }
 };
 

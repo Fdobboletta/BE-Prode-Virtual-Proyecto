@@ -70,9 +70,11 @@ app.post('/mercado-pago-notification', async (req, res) => {
       };
 
       if (req.body.action === 'payment.created') {
+        console.log('PAYMENT CREATED');
         await createPayment(filteredPayment);
       }
       if (req.body.action === 'payment.updated') {
+        console.log('PAYMENT UPDATED');
         await updatePayment(filteredPayment.id, filteredPayment);
       }
     }
