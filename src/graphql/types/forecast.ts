@@ -5,11 +5,7 @@ import { checkAuthAndRole } from './utils';
 import { UserRole } from 'database/models/user';
 
 import * as services from '../services/forecasts';
-
-export const ScoreEnum = enumType({
-  name: 'Score',
-  members: Score,
-});
+import { ScoreEnum } from './match';
 
 export const ForecastInput = inputObjectType({
   name: 'ScoreUpdateInput',
