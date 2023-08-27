@@ -36,6 +36,7 @@ export const generateMercadoPagoPreferenceId = async ({
     } = {
       additional_info: playerUserId,
       external_reference: playerUserId,
+      auto_return: 'approved',
       notification_url:
         'https://analysis-app-2023.onrender.com/mercado-pago-notification',
       items: [
