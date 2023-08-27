@@ -13,7 +13,7 @@ export interface ForecastType {
   id: string;
   matchId: string;
   playerId: string;
-  estimatedScore: Score;
+  estimatedScore: Score | null | undefined;
 }
 
 interface ForecastCreationType extends Optional<ForecastType, 'id'> {}

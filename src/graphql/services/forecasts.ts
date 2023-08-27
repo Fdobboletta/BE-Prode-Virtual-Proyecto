@@ -3,7 +3,7 @@ import { Score } from '../../database/models/forecast';
 import { UnknownError } from '../../custom-errors';
 
 type ForecastInput = {
-  forecastedScore: Score;
+  forecastedScore: Score | null | undefined;
   matchId: string;
 };
 
@@ -13,7 +13,7 @@ export const getForecast = async ({
 }: {
   matchId: string;
   userId: string;
-}): Promise<Score | null> => {
+}): Promise<Score | null | undefined> => {
   const existingForecast = await dbModels.ForecastModel.findOne({
     where: { playerId: userId, matchId: matchId },
   });

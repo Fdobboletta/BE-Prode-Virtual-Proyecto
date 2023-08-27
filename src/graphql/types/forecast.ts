@@ -5,6 +5,7 @@ import { UserRole } from '../../database/models/user';
 
 import * as services from '../services/forecasts';
 import { ScoreEnum } from './match';
+import { Score } from '../../database/models/match';
 
 export const ForecastInput = inputObjectType({
   name: 'ForecastInput',
@@ -23,9 +24,19 @@ export const createOrUpdateMultipleForecasts = mutationField(
     },
     resolve: async (_, args, ctx) => {
       checkAuthAndRole(ctx, UserRole.PLAYER);
+
+      const forecasts = args.forecasts.map(
+        (forecast: {
+          matchId: string;
+          score?: 'away' | 'draw' | 'home' | null | undefined;
+        }) => ({
+          matchId: forecast.matchId,
+          forecastedScore: forecast.score as Score | null | undefined,
+        }),
+      );
       const booleanResult = await services.createOrUpdateMultipleForecasts({
         userId: ctx.userId || '',
-        forecasts: args.forecasts,
+        forecasts: forecasts,
       });
 
       return booleanResult;
