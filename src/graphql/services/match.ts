@@ -142,11 +142,11 @@ export const getMatchesByRoomIdPlayer = async (
   userId: string,
 ): Promise<MatchType[]> => {
   try {
-    const payment = await dbModels.PaymentModel.findOne({
+    const participant = await dbModels.ParticipantModel.findOne({
       where: { roomId: roomId, playerId: userId },
     });
 
-    if (!payment) {
+    if (!participant) {
       throw new UnknownError(
         `El usuario no ha realizado el pago correspondiente para acceder a esta Sala`,
       );

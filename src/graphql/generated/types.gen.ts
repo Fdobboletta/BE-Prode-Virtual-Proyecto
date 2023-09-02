@@ -65,6 +65,13 @@ export interface NexusGenObjects {
     paymentLink: string; // String!
     prizeMoney: number; // Float!
   }
+  RoomParticipantWithScore: { // root type
+    email: string; // String!
+    lastName: string; // String!
+    name: string; // String!
+    participantId: string; // ID!
+    score?: number | null; // Int
+  }
   User: { // root type
     address: string; // String!
     cellphone: string; // String!
@@ -108,6 +115,7 @@ export interface NexusGenFieldTypes {
     activateRoom: NexusGenRootTypes['Room']; // Room!
     authenticateUser: NexusGenRootTypes['User']; // User!
     authorizeMercadoPago: NexusGenRootTypes['MercadoPagoAccessToken'] | null; // MercadoPagoAccessToken
+    calculateRoomResults: NexusGenRootTypes['RoomParticipantWithScore'][]; // [RoomParticipantWithScore!]!
     changePassword: string | null; // String
     createMatch: NexusGenRootTypes['Match']; // Match!
     createOrUpdateMultipleForecasts: boolean; // Boolean!
@@ -144,6 +152,13 @@ export interface NexusGenFieldTypes {
     paymentLink: string; // String!
     prizeMoney: number; // Float!
   }
+  RoomParticipantWithScore: { // field return type
+    email: string; // String!
+    lastName: string; // String!
+    name: string; // String!
+    participantId: string; // ID!
+    score: number | null; // Int
+  }
   User: { // field return type
     address: string; // String!
     cellphone: string; // String!
@@ -177,6 +192,7 @@ export interface NexusGenFieldTypeNames {
     activateRoom: 'Room'
     authenticateUser: 'User'
     authorizeMercadoPago: 'MercadoPagoAccessToken'
+    calculateRoomResults: 'RoomParticipantWithScore'
     changePassword: 'String'
     createMatch: 'Match'
     createOrUpdateMultipleForecasts: 'Boolean'
@@ -213,6 +229,13 @@ export interface NexusGenFieldTypeNames {
     paymentLink: 'String'
     prizeMoney: 'Float'
   }
+  RoomParticipantWithScore: { // field return type name
+    email: 'String'
+    lastName: 'String'
+    name: 'String'
+    participantId: 'ID'
+    score: 'Int'
+  }
   User: { // field return type name
     address: 'String'
     cellphone: 'String'
@@ -236,6 +259,9 @@ export interface NexusGenArgTypes {
     }
     authorizeMercadoPago: { // args
       mercadoPagoCode: string; // String!
+    }
+    calculateRoomResults: { // args
+      roomId: string; // String!
     }
     changePassword: { // args
       newPassword: string; // String!

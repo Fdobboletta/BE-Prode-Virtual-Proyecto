@@ -9,6 +9,7 @@ export interface RoomType {
   entryPrice: number;
   paymentLink: string;
   isActive: boolean;
+  isClosed: boolean;
   creatorId: string;
 }
 
@@ -48,6 +49,12 @@ export const defineRoomModel = (sequelizeInstance: SequelizeInstance) => {
       isActive: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+        allowNull: false,
+      },
+      isClosed: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
       },
       creatorId: {
         type: DataTypes.UUID,

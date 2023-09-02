@@ -2,13 +2,13 @@ import { MercadoPagoPayment } from '../../types';
 
 import { dbModels } from '../../server';
 import { NotFoundError, UnknownError } from '../../custom-errors';
-import { PaymentType } from '../../database/models/payment';
+import { ParticipantType } from '../../database/models/participant';
 
-export const createPayment = async (
+export const createParticipant = async (
   payment: MercadoPagoPayment,
-): Promise<PaymentType> => {
+): Promise<ParticipantType> => {
   try {
-    const newPayment = await dbModels.PaymentModel.create({
+    const newParticipant = await dbModels.ParticipantModel.create({
       mercadoPagoPaymentId: payment.id,
       paymentType: payment.payment_type_id,
       paymentMethod: payment.payment_method_id,
@@ -23,27 +23,28 @@ export const createPayment = async (
       playerId: payment.metadata.player_id,
     });
 
-    return newPayment.dataValues;
+    return newParticipant.dataValues;
   } catch (error: any) {
-    throw new Error(`Error saving payment : ${error.message}`);
-    console.log('ERROR!!! ', error.message);
+    throw new Error(`Error saving participant : ${error.message}`);
   }
 };
 
-export const updatePayment = async (
+export const updateParticipant = async (
   paymentId: string,
   updatedPaymentData: Partial<MercadoPagoPayment>,
-): Promise<PaymentType | null> => {
+): Promise<ParticipantType | null> => {
   try {
-    const existingPayment = await dbModels.PaymentModel.findOne({
+    const existingParticipant = await dbModels.ParticipantModel.findOne({
       where: { mercadoPagoPaymentId: paymentId },
     });
 
-    if (!existingPayment) {
-      throw new NotFoundError(`Payment with ID ${paymentId} not found`);
+    if (!existingParticipant) {
+      throw new NotFoundError(
+        `Payment with mercadoPagoPaymentId ${paymentId} not found`,
+      );
     }
 
-    await existingPayment.update({
+    await existingParticipant.update({
       paymentType: updatedPaymentData.payment_type_id,
       paymentMethod: updatedPaymentData.payment_method_id,
       paymentStatus: updatedPaymentData.status,
@@ -51,27 +52,27 @@ export const updatePayment = async (
       operationType: updatedPaymentData.operation_type,
       totalPaid: updatedPaymentData.transaction_details
         ? updatedPaymentData.transaction_details.total_paid_amount
-        : existingPayment.dataValues.totalPaid,
+        : existingParticipant.dataValues.totalPaid,
       netReceived: updatedPaymentData.transaction_details
         ? updatedPaymentData.transaction_details.net_received_amount
-        : existingPayment.dataValues.netReceived,
+        : existingParticipant.dataValues.netReceived,
       dateApproved: updatedPaymentData.date_approved
         ? new Date(updatedPaymentData.date_approved)
-        : existingPayment.dataValues.dateApproved,
+        : existingParticipant.dataValues.dateApproved,
       moneyReleaseDate: updatedPaymentData.money_release_date
         ? new Date(updatedPaymentData.money_release_date)
-        : existingPayment.dataValues.moneyReleaseDate,
+        : existingParticipant.dataValues.moneyReleaseDate,
     });
 
-    return existingPayment.dataValues;
+    return existingParticipant.dataValues;
   } catch (error: any) {
-    throw new Error(`Error updating payment: ${error.message}`);
+    throw new Error(`Error updating participant: ${error.message}`);
   }
 };
 
-export const getPaymentsCount = async (roomId: string): Promise<number> => {
+export const getParticipantsCount = async (roomId: string): Promise<number> => {
   try {
-    const paymentsFromRoom = await dbModels.PaymentModel.findAll({
+    const paymentsFromRoom = await dbModels.ParticipantModel.findAll({
       where: { roomId: roomId },
     });
     return paymentsFromRoom.length;

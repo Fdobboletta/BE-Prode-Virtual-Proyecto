@@ -14,7 +14,7 @@ import { UserInputError } from 'apollo-server-express';
 
 import { UserRole } from '../../database/models/user';
 import * as services from '../services/rooms';
-import * as paymentServices from '../services/payment';
+import * as participantServices from '../services/participant';
 import * as userServices from '../services/user';
 
 import { UserObject } from './user';
@@ -43,9 +43,8 @@ export const RoomObject = objectType({
       type: nonNull('Int'),
       resolve: async (room, _, ctx) => {
         // Fetch and return forecasts for this match and the requesting user
-        const participantsCount = await paymentServices.getPaymentsCount(
-          room.id,
-        );
+        const participantsCount =
+          await participantServices.getParticipantsCount(room.id);
         return participantsCount;
       },
     });
@@ -179,5 +178,30 @@ export const deleteRoom = mutationField('deleteRoom', {
     checkAuthAndRole(ctx, UserRole.ADMIN);
     await services.deleteRoom(args.roomId);
     return null;
+  },
+});
+
+export const RoomParticipantWithScore = objectType({
+  name: 'RoomParticipantWithScore',
+  description:
+    'Lista de participantes de la sala ordenada por puntaje de forma descendente',
+  definition: (t) => {
+    t.nonNull.id('participantId'),
+      t.nonNull.string('name'),
+      t.nonNull.string('lastName'),
+      t.nonNull.string('email'),
+      t.int('score');
+  },
+});
+
+export const calculateRoomResults = mutationField('calculateRoomResults', {
+  type: nonNull(list(nonNull(RoomParticipantWithScore))),
+  args: {
+    roomId: nonNull(stringArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    checkAuthAndRole(ctx, UserRole.ADMIN);
+    const ranking = await services.calculateRoomResults(args.roomId);
+    return ranking;
   },
 });

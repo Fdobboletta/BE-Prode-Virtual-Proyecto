@@ -11,7 +11,10 @@ import axios from 'axios';
 import { buildMercadoPagoHeaders } from './config';
 import { MercadoPagoPayment } from './types';
 
-import { createPayment, updatePayment } from './graphql/services/payment';
+import {
+  createParticipant,
+  updateParticipant,
+} from './graphql/services/participant';
 import { UnknownError } from './custom-errors';
 
 const app = express();
@@ -71,11 +74,11 @@ app.post('/mercado-pago-notification', async (req, res) => {
 
       if (req.body.action === 'payment.created') {
         console.log('PAYMENT CREATED');
-        await createPayment(filteredPayment);
+        await createParticipant(filteredPayment);
       }
       if (req.body.action === 'payment.updated') {
         console.log('PAYMENT UPDATED');
-        await updatePayment(filteredPayment.id, filteredPayment);
+        await updateParticipant(filteredPayment.id, filteredPayment);
       }
     }
 

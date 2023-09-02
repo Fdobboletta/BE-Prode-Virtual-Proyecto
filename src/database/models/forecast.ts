@@ -16,7 +16,7 @@ export interface ForecastType {
   estimatedScore: Score | null | undefined;
 }
 
-interface ForecastCreationType extends Optional<ForecastType, 'id'> {}
+export interface ForecastCreationType extends Optional<ForecastType, 'id'> {}
 
 export const defineForecastModel = (
   sequelizeInstance: SequelizeInstance,

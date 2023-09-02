@@ -3,14 +3,14 @@ import { defineForecastModel } from './forecast';
 import { defineMatchModel } from './match';
 import { defineRoomModel } from './room';
 import { defineUserModel } from './user';
-import { definePaymentModel } from './payment';
+import { defineParticipantModel } from './participant';
 
 export type DbModels = {
   UserModel: ReturnType<typeof defineUserModel>;
   RoomModel: ReturnType<typeof defineRoomModel>;
   MatchModel: ReturnType<typeof defineMatchModel>;
   ForecastModel: ReturnType<typeof defineForecastModel>;
-  PaymentModel: ReturnType<typeof definePaymentModel>;
+  ParticipantModel: ReturnType<typeof defineParticipantModel>;
 };
 
 export const defineModels = (
@@ -26,14 +26,14 @@ export const defineModels = (
     MatchModel,
     UserModel,
   );
-  const PaymentModel = definePaymentModel(sequelizeInstance, RoomModel);
+  const ParticipantModel = defineParticipantModel(sequelizeInstance, RoomModel);
 
   const allModels = {
     RoomModel,
     UserModel,
     MatchModel,
     ForecastModel,
-    PaymentModel,
+    ParticipantModel,
   };
 
   return allModels;

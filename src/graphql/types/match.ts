@@ -35,11 +35,12 @@ export const MatchObject = objectType({
       type: ScoreEnum,
       resolve: async (parent, _, ctx) => {
         // Fetch and return forecasts for this match and the requesting user
-        const forecasts = await forecastServices.getForecast({
+        const forecast = (await forecastServices.getForecast({
           matchId: parent.id,
           userId: ctx.userId || '',
-        });
-        return forecasts;
+        })) as Score | null;
+
+        return forecast;
       },
     });
   },

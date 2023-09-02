@@ -2,7 +2,7 @@ import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
 import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
 import { RoomCreationType, RoomType } from './room';
 
-export interface PaymentType {
+export interface ParticipantType {
   id: string;
   mercadoPagoPaymentId: string;
   paymentType: string;
@@ -16,18 +16,20 @@ export interface PaymentType {
   moneyReleaseDate: Date;
   roomId: string;
   playerId: string;
+  score?: number;
 }
 
-export interface PaymentCreationType extends Optional<PaymentType, 'id'> {}
+export interface ParticipantCreationType
+  extends Optional<ParticipantType, 'id'> {}
 
-export const definePaymentModel = (
+export const defineParticipantModel = (
   sequelizeInstance: SequelizeInstance,
   RoomModel: ModelStatic<Model<RoomType, RoomCreationType>>,
 ) => {
-  const PaymentModel = sequelizeInstance.define<
-    Model<PaymentType, PaymentCreationType>
+  const ParticipantModel = sequelizeInstance.define<
+    Model<ParticipantType, ParticipantCreationType>
   >(
-    'Payment',
+    'Participant',
     {
       id: {
         type: DataTypes.UUID,
@@ -81,16 +83,19 @@ export const definePaymentModel = (
       moneyReleaseDate: {
         type: DataTypes.DATE,
       },
+      score: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
       indexes: [{ unique: true, fields: ['roomId', 'playerId'] }],
     },
   );
 
-  PaymentModel.belongsTo(RoomModel, {
+  ParticipantModel.belongsTo(RoomModel, {
     foreignKey: 'roomId',
     as: 'room',
   });
 
-  return PaymentModel;
+  return ParticipantModel;
 };

@@ -33,6 +33,7 @@ type Mutation {
   activateRoom(roomId: String!): Room!
   authenticateUser(email: String!, password: String!): User!
   authorizeMercadoPago(mercadoPagoCode: String!): MercadoPagoAccessToken
+  calculateRoomResults(roomId: String!): [RoomParticipantWithScore!]!
   changePassword(newPassword: String!, token: String!): String
   createMatch(awayTeam: String!, date: String!, homeTeam: String!, roomId: String!): Match!
   createOrUpdateMultipleForecasts(forecasts: [ForecastInput!]!): Boolean!
@@ -71,6 +72,17 @@ type Room {
   participantsCount: Int!
   paymentLink: String!
   prizeMoney: Float!
+}
+
+"""
+Lista de participantes de la sala ordenada por puntaje de forma descendente
+"""
+type RoomParticipantWithScore {
+  email: String!
+  lastName: String!
+  name: String!
+  participantId: ID!
+  score: Int
 }
 
 enum Score {

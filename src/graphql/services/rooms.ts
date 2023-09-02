@@ -6,10 +6,13 @@ import {
   UnknownError,
 } from '../../custom-errors';
 import { dbModels } from '../../server';
-import { PaymentType } from '../../database/models/payment';
+import { ParticipantType } from '../../database/models/participant';
 
-import { Model, Op } from 'sequelize';
+import { Model } from 'sequelize';
 import { sequelizeInstance } from '../../database';
+import { ForecastType } from '../../database/models/forecast';
+import { MatchCreationType, MatchType } from 'database/models/match';
+import { UserCreationType, UserType } from 'database/models/user';
 
 type CreateRoomType = {
   name: string;
@@ -47,6 +50,7 @@ export const createNewRoom = async (
       paymentLink: '',
       isActive: args.isActive || false,
       creatorId: userId,
+      isClosed: false,
     });
 
     return room.dataValues;
@@ -144,7 +148,7 @@ export const getRoomById = async (roomId: string): Promise<RoomType> => {
   }
 };
 
-type PaymentWithRoom = PaymentType & {
+type ParticipantWithRoom = ParticipantType & {
   room: Model<RoomType, RoomCreationType>;
 };
 
@@ -152,21 +156,21 @@ export const getUserPayedRooms = async (
   userId: string,
 ): Promise<RoomType[]> => {
   try {
-    const payments = (
-      await dbModels.PaymentModel.findAll({
+    const participant = (
+      await dbModels.ParticipantModel.findAll({
         where: { playerId: userId },
         include: { model: dbModels.RoomModel, as: 'room' },
       })
     ).map((payment) => payment.dataValues);
 
-    if (!payments) {
+    if (!participant) {
       throw new NotFoundError(
         'No se pudo encontrar el pago con el ID solicitado',
       );
     }
 
-    return payments.map((payment) => {
-      const paymentWithRoom = payment as PaymentWithRoom;
+    return participant.map((participant) => {
+      const paymentWithRoom = participant as ParticipantWithRoom;
 
       return paymentWithRoom.room.dataValues;
     });
@@ -213,4 +217,113 @@ export const updateRoom = async (
       `No fue posible actualizar la sala: ${error.message}`,
     );
   }
+};
+
+type ForecastWithMatch = ForecastType & {
+  match: Model<MatchType, MatchCreationType>;
+};
+
+type ParticipantWithUser = ParticipantType & {
+  user: Model<UserType, UserCreationType>;
+};
+
+const calculateScores = (forecasts: ForecastWithMatch[]) => {
+  const playerScores: Record<string, number> = {};
+
+  forecasts.forEach((forecast) => {
+    const { officialScore } = forecast.match.dataValues; // Resultado oficial del partido
+    const estimatedScore = forecast.estimatedScore; // Pronóstico del jugador
+
+    const score = officialScore === estimatedScore ? 1 : 0;
+
+    if (!playerScores[forecast.playerId]) {
+      playerScores[forecast.playerId] = 0;
+    }
+
+    playerScores[forecast.playerId] += score;
+  });
+
+  return playerScores;
+};
+
+export const calculateRoomResults = async (
+  roomId: string,
+): Promise<
+  {
+    participantId: string;
+    name: string;
+    lastName: string;
+    email: string;
+    score: number | undefined;
+  }[]
+> => {
+  // Obtén todos los partidos (matches) para el Room
+  const matches = await dbModels.MatchModel.findAll({
+    where: { roomId },
+    attributes: ['id'],
+  });
+
+  // Luego, utiliza los IDs de los partidos para obtener las predicciones (forecasts)
+  const forecastsQuery = await dbModels.ForecastModel.findAll({
+    where: {
+      matchId: matches.map((match) => match.dataValues.id),
+    },
+    include: [
+      {
+        model: dbModels.MatchModel,
+        attributes: ['officialScore'],
+        as: 'match',
+      },
+    ],
+  });
+
+  const forecasts = forecastsQuery.map(
+    (forecast) => forecast.dataValues as ForecastWithMatch,
+  );
+
+  // Calcula los puntajes
+  const updatedScores = calculateScores(forecasts);
+
+  // Obtiene todos los registros de los participantes para el Room
+  const participants = await dbModels.ParticipantModel.findAll({
+    where: { roomId },
+    attributes: ['playerId', 'score'],
+    include: [
+      {
+        model: dbModels.UserModel,
+        attributes: ['firstName', 'lastName', 'email'],
+        as: 'user',
+      },
+    ],
+  });
+
+  const promises = participants.map(async (participant) => {
+    const updatedScore = updatedScores[participant.dataValues.playerId] || 0;
+    const currentScore = participant.dataValues.score || 0;
+
+    await participant.update({
+      score: currentScore + updatedScore,
+    });
+  });
+
+  await Promise.all(promises);
+
+  // Ordena los participantes por puntaje en forma descendente
+  const sortedParticipants = participants
+    .filter((participant) => participant.dataValues.score !== undefined)
+    .sort((a, b) => {
+      const scoreA = a.dataValues.score || 0;
+      const scoreB = b.dataValues.score || 0;
+      return scoreB - scoreA;
+    })
+    .map((participant) => participant.dataValues as ParticipantWithUser);
+
+  // Devuelve la lista de participantes ordenada
+  return sortedParticipants.map((participant) => ({
+    participantId: participant.id,
+    name: participant.user.dataValues.firstName,
+    lastName: participant.user.dataValues.lastName,
+    email: participant.user.dataValues.email,
+    score: participant.score,
+  }));
 };
