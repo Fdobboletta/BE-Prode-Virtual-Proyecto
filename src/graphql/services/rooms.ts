@@ -109,18 +109,28 @@ export const getRoomsByCreatorId = async (
   }
 };
 
-export const getActiveUnpaidRooms = async (): Promise<RoomType[]> => {
+export const getActiveUnpaidRooms = async ({
+  userId,
+}: {
+  userId: string;
+}): Promise<RoomType[]> => {
   try {
     const query = `
       SELECT *
       FROM "Rooms"
       WHERE "isActive" = true
-        AND "id" NOT IN (SELECT "roomId" FROM "Payments")
+        AND "isClosed" = false
+        AND "id" NOT IN (
+          SELECT "roomId"
+          FROM "Participants"
+          WHERE "playerId" = :userId
+        );
     `;
 
     const activeUnpaidRooms = await sequelizeInstance.query(query, {
       model: dbModels.RoomModel,
       mapToModel: true,
+      replacements: { userId }, // Pasa el userId como reemplazo
     });
 
     return activeUnpaidRooms.map((room) => room.dataValues);

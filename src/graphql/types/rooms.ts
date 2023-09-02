@@ -81,7 +81,9 @@ export const getActiveUnpaidRooms = queryField('getActiveUnpaidRooms', {
   type: nonNull(list(nonNull(RoomObject))),
   resolve: async (_, args, ctx) => {
     checkAuthAndRole(ctx, UserRole.PLAYER);
-    const roomsList = await services.getActiveUnpaidRooms();
+    const roomsList = await services.getActiveUnpaidRooms({
+      userId: ctx.userId || '',
+    });
 
     return roomsList.map((room) => ({
       ...room,
