@@ -49,10 +49,20 @@ type Mutation {
   updateRoom(dueDate: String!, entryPrice: Float!, isActive: Boolean!, name: String!, prizeMoney: Float!, roomId: String!): Room
 }
 
+"""Usuario participando de un prode"""
+type Participant {
+  email: String!
+  firstName: String!
+  id: ID!
+  lastName: String!
+  score: Int
+}
+
 type Query {
   getActiveUnpaidRooms: [Room!]!
   getMatchesByRoomId(roomId: String!): [Match!]!
   getMatchesByRoomIdForPlayers(roomId: String!): [Match!]!
+  getParticipantsByRoomId(roomId: String!): [Participant!]!
   getRoomById(roomId: String!): Room!
   getRoomsByUserId: [Room!]!
   getUserMpAccessToken: String

@@ -4,6 +4,9 @@ import { dbModels } from '../../server';
 import { NotFoundError, UnknownError } from '../../custom-errors';
 import { ParticipantType } from '../../database/models/participant';
 
+import { UserCreationType, UserType } from '../../database/models/user';
+import { Model } from 'sequelize';
+
 export const createParticipant = async (
   payment: MercadoPagoPayment,
 ): Promise<ParticipantType> => {
@@ -76,6 +79,47 @@ export const getParticipantsCount = async (roomId: string): Promise<number> => {
       where: { roomId: roomId },
     });
     return paymentsFromRoom.length;
+  } catch (error: any) {
+    throw new UnknownError(`Error getting payments count: ${error.message}`);
+  }
+};
+
+type ParticipantWithUser = ParticipantType & {
+  user: Model<UserType, UserCreationType>;
+};
+
+export const getParticipantsByRoomId = async (
+  roomId: string,
+): Promise<
+  {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    score: number | undefined;
+  }[]
+> => {
+  try {
+    const participantsFromRoom = await dbModels.ParticipantModel.findAll({
+      where: { roomId: roomId },
+      include: [
+        {
+          model: dbModels.UserModel,
+          attributes: ['firstName', 'lastName', 'email'],
+          as: 'user',
+        },
+      ],
+    });
+    const participantsWithUser = participantsFromRoom.map(
+      (participant) => participant.dataValues as ParticipantWithUser,
+    );
+    return participantsWithUser.map((participant) => ({
+      id: participant.id,
+      email: participant.user.dataValues.email,
+      firstName: participant.user.dataValues.firstName,
+      lastName: participant.user.dataValues.lastName,
+      score: participant.score,
+    }));
   } catch (error: any) {
     throw new UnknownError(`Error getting payments count: ${error.message}`);
   }

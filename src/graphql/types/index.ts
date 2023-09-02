@@ -4,3 +4,4 @@ export * from './jwt';
 export * from './rooms';
 export * from './match';
 export * from './forecast';
+export * from './participant';

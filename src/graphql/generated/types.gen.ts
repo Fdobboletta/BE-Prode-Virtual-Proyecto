@@ -54,6 +54,13 @@ export interface NexusGenObjects {
     redirectLink: string; // String!
   }
   Mutation: {};
+  Participant: { // root type
+    email: string; // String!
+    firstName: string; // String!
+    id: string; // ID!
+    lastName: string; // String!
+    score?: number | null; // Int
+  }
   Query: {};
   Room: { // root type
     creatorId: string; // ID!
@@ -130,10 +137,18 @@ export interface NexusGenFieldTypes {
     updateMatch: NexusGenRootTypes['Match']; // Match!
     updateRoom: NexusGenRootTypes['Room'] | null; // Room
   }
+  Participant: { // field return type
+    email: string; // String!
+    firstName: string; // String!
+    id: string; // ID!
+    lastName: string; // String!
+    score: number | null; // Int
+  }
   Query: { // field return type
     getActiveUnpaidRooms: NexusGenRootTypes['Room'][]; // [Room!]!
     getMatchesByRoomId: NexusGenRootTypes['Match'][]; // [Match!]!
     getMatchesByRoomIdForPlayers: NexusGenRootTypes['Match'][]; // [Match!]!
+    getParticipantsByRoomId: NexusGenRootTypes['Participant'][]; // [Participant!]!
     getRoomById: NexusGenRootTypes['Room']; // Room!
     getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
     getUserMpAccessToken: string | null; // String
@@ -207,10 +222,18 @@ export interface NexusGenFieldTypeNames {
     updateMatch: 'Match'
     updateRoom: 'Room'
   }
+  Participant: { // field return type name
+    email: 'String'
+    firstName: 'String'
+    id: 'ID'
+    lastName: 'String'
+    score: 'Int'
+  }
   Query: { // field return type name
     getActiveUnpaidRooms: 'Room'
     getMatchesByRoomId: 'Match'
     getMatchesByRoomIdForPlayers: 'Match'
+    getParticipantsByRoomId: 'Participant'
     getRoomById: 'Room'
     getRoomsByUserId: 'Room'
     getUserMpAccessToken: 'String'
@@ -328,6 +351,9 @@ export interface NexusGenArgTypes {
       roomId: string; // String!
     }
     getMatchesByRoomIdForPlayers: { // args
+      roomId: string; // String!
+    }
+    getParticipantsByRoomId: { // args
       roomId: string; // String!
     }
     getRoomById: { // args
