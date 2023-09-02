@@ -317,6 +317,13 @@ export const calculateRoomResults = async (
   });
 
   await Promise.all(promises);
+  const roomToClose = await dbModels.RoomModel.findByPk(roomId);
+
+  if (!roomToClose) {
+    throw new NotFoundError(`No se pudo encontrar la sala`);
+  }
+
+  await roomToClose.update({ isClosed: true });
 
   // Ordena los participantes por puntaje en forma descendente
   const sortedParticipants = participants
