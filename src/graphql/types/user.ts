@@ -11,6 +11,7 @@ import {
 import * as service from '../services/user';
 import { UserRole } from '../../database/models/user';
 import { UserInputError } from 'apollo-server-express';
+import { checkAuthAndRole } from './utils';
 
 export const UserRoleEnum = enumType({
   name: 'UserRole',
@@ -27,7 +28,7 @@ export const UserObject = objectType({
       t.nonNull.string('lastName'),
       t.nonNull.string('address'),
       t.nonNull.string('cellphone'),
-      t.nonNull.string('token'),
+      t.string('token'),
       t.nonNull.field('role', { type: nonNull(UserRoleEnum) });
   },
 });
@@ -87,6 +88,29 @@ export const changePassword = mutationField('changePassword', {
   resolve: async (_, args) => {
     await service.changePassword(args.newPassword, args.token);
     return null;
+  },
+});
+
+export const updateUserData = mutationField('updateUserData', {
+  type: nullable(UserObject),
+  args: {
+    newPassword: nullable(stringArg()),
+    firstName: nullable(stringArg()),
+    lastName: nullable(stringArg()),
+    cellphone: nullable(stringArg()),
+    address: nullable(stringArg()),
+  },
+  resolve: async (_, args, ctx) => {
+    checkAuthAndRole(ctx, UserRole.ADMIN);
+    const updatedUser = await service.updateUserData(ctx.userId || '', {
+      newPassword: args.newPassword,
+      address: args.address,
+      lastName: args.lastName,
+      firstName: args.firstName,
+      cellphone: args.cellphone,
+    });
+
+    return updatedUser.dataValues;
   },
 });
 

@@ -87,7 +87,7 @@ export interface NexusGenObjects {
     id: string; // ID!
     lastName: string; // String!
     role: NexusGenEnums['UserRole']; // UserRole!
-    token: string; // String!
+    token?: string | null; // String
   }
 }
 
@@ -136,6 +136,7 @@ export interface NexusGenFieldTypes {
     updateManyMatchScores: NexusGenRootTypes['Match'][]; // [Match!]!
     updateMatch: NexusGenRootTypes['Match']; // Match!
     updateRoom: NexusGenRootTypes['Room'] | null; // Room
+    updateUserData: NexusGenRootTypes['User'] | null; // User
   }
   Participant: { // field return type
     email: string; // String!
@@ -182,7 +183,7 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     lastName: string; // String!
     role: NexusGenEnums['UserRole']; // UserRole!
-    token: string; // String!
+    token: string | null; // String
   }
 }
 
@@ -221,6 +222,7 @@ export interface NexusGenFieldTypeNames {
     updateManyMatchScores: 'Match'
     updateMatch: 'Match'
     updateRoom: 'Room'
+    updateUserData: 'User'
   }
   Participant: { // field return type name
     email: 'String'
@@ -344,6 +346,13 @@ export interface NexusGenArgTypes {
       name: string; // String!
       prizeMoney: number; // Float!
       roomId: string; // String!
+    }
+    updateUserData: { // args
+      address?: string | null; // String
+      cellphone?: string | null; // String
+      firstName?: string | null; // String
+      lastName?: string | null; // String
+      newPassword?: string | null; // String
     }
   }
   Query: {

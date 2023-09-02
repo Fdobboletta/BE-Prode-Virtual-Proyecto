@@ -202,3 +202,58 @@ export const getUserById = async (userId: string): Promise<UserType> => {
     throw new Error('Unable get user MP access token.');
   }
 };
+
+export const updateUserData = async (
+  userId: string,
+  args: {
+    newPassword?: string | null | undefined;
+    firstName?: string | null | undefined;
+    lastName?: string | null | undefined;
+    cellphone?: string | null | undefined;
+    address?: string | null | undefined;
+  },
+) => {
+  try {
+    // Encuentra al usuario actual en la base de datos
+    const user = await dbModels.UserModel.findByPk(userId);
+
+    if (!user) {
+      throw new NotFoundError('Usuario no encontrado');
+    }
+
+    if (args.newPassword) {
+      const hashedPassword = await bcrypt.hash(args.newPassword, 10);
+      user.dataValues.password = hashedPassword;
+    }
+
+    if (args.firstName) {
+      user.dataValues.firstName = args.firstName;
+    }
+
+    if (args.lastName) {
+      user.dataValues.lastName = args.lastName;
+    }
+
+    if (args.cellphone) {
+      user.dataValues.cellphone = args.cellphone;
+    }
+
+    if (args.address) {
+      user.dataValues.address = args.address;
+    }
+
+    // Guarda los cambios en la base de datos
+    await user.save();
+
+    // Devuelve el usuario actualizado
+    return user;
+  } catch (error) {
+    console.error(error);
+
+    // Maneja los errores específicos según tus necesidades
+    if (error instanceof CustomError) {
+      throw error;
+    }
+    throw new UnknownError('Error desconocido al actualizar el usuario');
+  }
+};
