@@ -1,5 +1,6 @@
 import { Sequelize as SequelizeInstance } from 'sequelize/types/sequelize';
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, Model, ModelStatic, Optional } from 'sequelize';
+import { UserCreationType, UserType } from './user';
 
 export interface RoomType {
   id: string;
@@ -16,7 +17,10 @@ export interface RoomType {
 export interface RoomCreationType
   extends Optional<RoomType, 'id' | 'paymentLink' | 'creatorId'> {}
 
-export const defineRoomModel = (sequelizeInstance: SequelizeInstance) => {
+export const defineRoomModel = (
+  sequelizeInstance: SequelizeInstance,
+  UserModel: ModelStatic<Model<UserType, UserCreationType>>,
+) => {
   const RoomModel = sequelizeInstance.define<Model<RoomType, RoomCreationType>>(
     'Room',
     {
@@ -66,6 +70,8 @@ export const defineRoomModel = (sequelizeInstance: SequelizeInstance) => {
       },
     },
   );
+
+  RoomModel.belongsTo(UserModel, { foreignKey: 'creatorId', as: 'user' });
 
   return RoomModel;
 };

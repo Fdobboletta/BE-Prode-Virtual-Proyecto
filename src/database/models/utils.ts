@@ -16,8 +16,9 @@ export type DbModels = {
 export const defineModels = (
   sequelizeInstance: SequelizeInstance,
 ): DbModels => {
-  const RoomModel = defineRoomModel(sequelizeInstance);
   const UserModel = defineUserModel(sequelizeInstance);
+
+  const RoomModel = defineRoomModel(sequelizeInstance, UserModel);
 
   const MatchModel = defineMatchModel(sequelizeInstance, RoomModel);
 
@@ -26,7 +27,11 @@ export const defineModels = (
     MatchModel,
     UserModel,
   );
-  const ParticipantModel = defineParticipantModel(sequelizeInstance, RoomModel);
+  const ParticipantModel = defineParticipantModel(
+    sequelizeInstance,
+    RoomModel,
+    UserModel,
+  );
 
   const allModels = {
     RoomModel,

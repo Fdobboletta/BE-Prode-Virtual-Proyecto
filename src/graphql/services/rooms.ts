@@ -297,7 +297,7 @@ export const calculateRoomResults = async (
   // Obtiene todos los registros de los participantes para el Room
   const participants = await dbModels.ParticipantModel.findAll({
     where: { roomId },
-    attributes: ['playerId', 'score'],
+    attributes: ['id', 'playerId', 'score'],
     include: [
       {
         model: dbModels.UserModel,

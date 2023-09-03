@@ -79,6 +79,7 @@ type Room {
   entryPrice: Float!
   id: ID!
   isActive: Boolean!
+  isClosed: Boolean!
   name: String!
   participantsCount: Int!
   paymentLink: String!

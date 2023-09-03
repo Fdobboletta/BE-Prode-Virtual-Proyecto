@@ -68,6 +68,7 @@ export interface NexusGenObjects {
     entryPrice: number; // Float!
     id: string; // ID!
     isActive: boolean; // Boolean!
+    isClosed: boolean; // Boolean!
     name: string; // String!
     paymentLink: string; // String!
     prizeMoney: number; // Float!
@@ -163,6 +164,7 @@ export interface NexusGenFieldTypes {
     entryPrice: number; // Float!
     id: string; // ID!
     isActive: boolean; // Boolean!
+    isClosed: boolean; // Boolean!
     name: string; // String!
     participantsCount: number; // Int!
     paymentLink: string; // String!
@@ -249,6 +251,7 @@ export interface NexusGenFieldTypeNames {
     entryPrice: 'Float'
     id: 'ID'
     isActive: 'Boolean'
+    isClosed: 'Boolean'
     name: 'String'
     participantsCount: 'Int'
     paymentLink: 'String'

@@ -32,6 +32,7 @@ export const RoomObject = objectType({
       t.nonNull.float('entryPrice'),
       t.nonNull.string('paymentLink'),
       t.nonNull.boolean('isActive');
+    t.nonNull.boolean('isClosed');
     t.field('creator', {
       type: nonNull(UserObject),
       resolve: async (room, _, ctx) => {

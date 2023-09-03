@@ -52,8 +52,8 @@ export const defineForecastModel = (
     },
   });
 
-  ForecastModel.belongsTo(MatchModel, { foreignKey: 'matchId' });
-  ForecastModel.belongsTo(UserModel, { foreignKey: 'playerId' });
+  ForecastModel.belongsTo(MatchModel, { foreignKey: 'matchId', as: 'match' });
+  ForecastModel.belongsTo(UserModel, { foreignKey: 'playerId', as: 'user' });
 
   return ForecastModel;
 };

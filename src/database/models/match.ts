@@ -58,7 +58,7 @@ export const defineMatchModel = (
     },
   });
 
-  MatchModel.belongsTo(RoomModel, { foreignKey: 'roomId' });
+  MatchModel.belongsTo(RoomModel, { foreignKey: 'roomId', as: 'room' });
 
   return MatchModel;
 };
