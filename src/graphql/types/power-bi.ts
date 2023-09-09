@@ -12,7 +12,10 @@ export const getPowerBiAccessToken = queryField('getPowerBiAccessToken', {
         'UmQ8Q~TJHwV0MUqmY1bx6v3JzaVWijt16TQ8Cbpf',
       );
       params.append('grant_type', 'client_credentials');
-      params.append('scope', 'https://graph.microsoft.com/.default');
+      params.append(
+        'scope',
+        'https://analysis.windows.net/powerbi/api/.default',
+      );
 
       const response = await axios.post(
         'https://login.microsoftonline.com/2dd23f82-d7a2-4f1a-85ff-622ebf7d878c/oauth2/v2.0/token',
