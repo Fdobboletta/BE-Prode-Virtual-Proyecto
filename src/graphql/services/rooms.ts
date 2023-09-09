@@ -8,8 +8,8 @@ import {
 import { dbModels } from '../../server';
 import { ParticipantType } from '../../database/models/participant';
 
-import { Model } from 'sequelize';
-import { sequelizeInstance } from '../../database';
+import { Model, Op } from 'sequelize';
+
 import { ForecastType } from '../../database/models/forecast';
 import { MatchCreationType, MatchType } from 'database/models/match';
 import { UserCreationType, UserType } from 'database/models/user';
@@ -115,22 +115,21 @@ export const getActiveUnpaidRooms = async ({
   userId: string;
 }): Promise<RoomType[]> => {
   try {
-    const query = `
-      SELECT *
-      FROM "Rooms"
-      WHERE "isActive" = true
-        AND "isClosed" = false
-        AND "id" NOT IN (
-          SELECT "roomId"
-          FROM "Participants"
-          WHERE "playerId" = :userId
-        );
-    `;
+    const currentUserPaidRooms = await dbModels.ParticipantModel.findAll({
+      where: { playerId: userId, paymentStatus: 'approved' },
+      attributes: ['roomId'],
+    });
 
-    const activeUnpaidRooms = await sequelizeInstance.query(query, {
-      model: dbModels.RoomModel,
-      mapToModel: true,
-      replacements: { userId }, // Pasa el userId como reemplazo
+    const paidRoomIds = currentUserPaidRooms.map(
+      (roomFromQuery) => roomFromQuery.dataValues.roomId,
+    );
+
+    const activeUnpaidRooms = await dbModels.RoomModel.findAll({
+      where: {
+        id: { [Op.notIn]: paidRoomIds },
+        isActive: true,
+        isClosed: false,
+      },
     });
 
     return activeUnpaidRooms.map((room) => room.dataValues);

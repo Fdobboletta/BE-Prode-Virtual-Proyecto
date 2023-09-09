@@ -116,9 +116,10 @@ const startServer = async () => {
 connectDatabase();
 
 export const dbModels = defineModels(sequelizeInstance);
+
 if (sequelizeInstance) {
   sequelizeInstance
-    .sync({ alter: true })
+    .sync()
     .then(() => console.log('📊 -> Database schema synchronized successfully!'))
     .catch((error) => console.log('Error -> Db sync failed!!', error));
 }

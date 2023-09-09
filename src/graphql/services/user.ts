@@ -192,14 +192,15 @@ export const getUserMpAccessToken = async (userId: string) => {
 export const getUserById = async (userId: string): Promise<UserType> => {
   try {
     const user = await dbModels.UserModel.findByPk(userId);
+
     if (!user) {
       throw new NotFoundError('User not found');
     }
 
     return user.dataValues;
   } catch (error) {
-    console.error('Error getting user Mp access token:', error);
-    throw new Error('Unable get user MP access token.');
+    console.error('User not found:', error);
+    throw new Error(`Unable get user with id ${userId}.`);
   }
 };
 

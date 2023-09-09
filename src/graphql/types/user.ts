@@ -101,7 +101,7 @@ export const updateUserData = mutationField('updateUserData', {
     address: nullable(stringArg()),
   },
   resolve: async (_, args, ctx) => {
-    checkAuthAndRole(ctx, UserRole.ADMIN);
+    checkAuthAndRole(ctx, UserRole.PLAYER);
     const updatedUser = await service.updateUserData(ctx.userId || '', {
       newPassword: args.newPassword,
       address: args.address,
