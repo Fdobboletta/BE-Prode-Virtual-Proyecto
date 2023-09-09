@@ -64,6 +64,7 @@ type Query {
   getMatchesByRoomId(roomId: String!): [Match!]!
   getMatchesByRoomIdForPlayers(roomId: String!): [Match!]!
   getParticipantsByRoomId(roomId: String!): [Participant!]!
+  getPowerBiAccessToken: String!
   getRoomById(roomId: String!): Room!
   getRoomsByUserId: [Room!]!
   getUserMpAccessToken: String

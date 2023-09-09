@@ -151,6 +151,7 @@ export interface NexusGenFieldTypes {
     getMatchesByRoomId: NexusGenRootTypes['Match'][]; // [Match!]!
     getMatchesByRoomIdForPlayers: NexusGenRootTypes['Match'][]; // [Match!]!
     getParticipantsByRoomId: NexusGenRootTypes['Participant'][]; // [Participant!]!
+    getPowerBiAccessToken: string; // String!
     getRoomById: NexusGenRootTypes['Room']; // Room!
     getRoomsByUserId: NexusGenRootTypes['Room'][]; // [Room!]!
     getUserMpAccessToken: string | null; // String
@@ -238,6 +239,7 @@ export interface NexusGenFieldTypeNames {
     getMatchesByRoomId: 'Match'
     getMatchesByRoomIdForPlayers: 'Match'
     getParticipantsByRoomId: 'Participant'
+    getPowerBiAccessToken: 'String'
     getRoomById: 'Room'
     getRoomsByUserId: 'Room'
     getUserMpAccessToken: 'String'
