@@ -4,6 +4,7 @@ import { NotFoundError, UnknownError } from '../../custom-errors';
 import { CreatePreferencePayload } from 'mercadopago/models/preferences/create-payload.model';
 import { dbModels } from '../../server';
 import { buildMercadoPagoHeaders } from '../../config';
+import { isAfter } from 'date-fns';
 
 export const generateMercadoPagoPreferenceId = async ({
   playerUserId,
@@ -15,13 +16,18 @@ export const generateMercadoPagoPreferenceId = async ({
   try {
     const queriedRoom = await dbModels.RoomModel.findByPk(roomId);
     if (!queriedRoom) {
-      throw new NotFoundError('Room not found.');
+      throw new NotFoundError('Sala no encontrada.');
     }
+
     const room = queriedRoom.dataValues;
+
+    if (isAfter(new Date(), room.dueDate)) {
+      throw new Error('La fecha limite de la sala se ha excedido.');
+    }
 
     const roomCreatorUser = await dbModels.UserModel.findByPk(room.creatorId);
     if (!roomCreatorUser) {
-      throw new NotFoundError('User not found.');
+      throw new NotFoundError('Usuario no encontrado.');
     }
 
     const roomCreatorUserData = roomCreatorUser.dataValues;
@@ -81,7 +87,7 @@ export const getMercadoPagoAccessToken = async (
     const user = await dbModels.UserModel.findByPk(userId);
 
     if (!user) {
-      throw new NotFoundError('User not found');
+      throw new NotFoundError('Usuario no encontrado');
     }
 
     const redirectUri = 'https://comuniprode.netlify.app/admin/integrations';
